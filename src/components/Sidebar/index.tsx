@@ -122,8 +122,8 @@ const menuGroups = [
         label: "Order",
         route: "#",
         children: [
-          { label: "Table", route: "/ordertable" },
-          { label: "Overview", route: "/orderoverview" },
+          { label: "Overview", route: "/order/overview" },
+          { label: "Management", route: "/order/management" },
         ],
       },
       {
