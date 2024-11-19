@@ -14,7 +14,7 @@ const ProductCategory = () => {
       <Breadcrumb pageName="Product Category" />
 
       <Link
-              href="#"
+              href="/product/category/add-category"
               className="mb-3 inline-flex items-center justify-center rounded-full bg-black px-5 py-3 text-center font-normal text-white hover:bg-opacity-90 lg:px-4 xl:px-6"
             >
               Add Category
