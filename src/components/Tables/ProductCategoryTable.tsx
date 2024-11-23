@@ -1,36 +1,33 @@
-import ProductCategory from "@/app/product/category/page";
+"use client";
+import { useState, useContext } from "react";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import { Contexts } from "@/app/Contexts";
 
 
-const categoryData = [
-  {
-    name: "Free package",
-    price: 0.0,
-    invoiceDate: `Jan 13,2023`,
-    status: "Paid",
-  },
-  {
-    name: "Standard Package",
-    price: 59.0,
-    invoiceDate: `Jan 13,2023`,
-    status: "Paid",
-  },
-  {
-    name: "Business Package",
-    price: 99.0,
-    invoiceDate: `Jan 13,2023`,
-    status: "Unpaid",
-  },
-  {
-    name: "Standard Package",
-    price: 59.0,
-    invoiceDate: `Jan 13,2023`,
-    status: "Pending",
-  },
-];
 
 const ProductCategoryTable = () => {
+  const{categories}: any = useContext(Contexts)
+  
+  const itemsPerPage = 8; // Số mục mỗi trang
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.ceil(categories.length / itemsPerPage);
+  const handleNext = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
+
+  const getPaginatedData = () => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return categories.slice(startIndex, startIndex + itemsPerPage);
+  };
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
       <div className=" inset-0 flex justify-start">
@@ -43,7 +40,7 @@ const ProductCategoryTable = () => {
           <input
             type="text"
             placeholder="Type to search..."
-            className="w-full bg-transparent pl-9 pr-4 font-medium focus:outline-none xl:w-125"
+            className="w-full bg-transparent pl-9 pr-4 font-medium focus:outline-none xl:w-11/12"
           />
         </div>
       </form>
@@ -62,11 +59,11 @@ const ProductCategoryTable = () => {
             </tr>
           </thead>
           <tbody>
-            {categoryData.map((category, key) => (
-              <tr key={key}>
+            {getPaginatedData().map((category:any, key) => (
+              <tr key={category._id}>
                 <td className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
                   <h5 className="font-medium text-black dark:text-white">
-                    {category.name}
+                    {category._id}
                   </h5>
                   
                 </td>
@@ -109,6 +106,19 @@ const ProductCategoryTable = () => {
             ))}
           </tbody>
         </table>
+      </div>
+      <div className="flex justify-start pt-8 pf-3 pr-4 md:justify-center xl:justify-center lg:justify-center ">
+        <button className="hover:font-medium hover:cursor-pointer hover:text-sky-500"
+         onClick={handlePrevious} disabled={currentPage === 1}>
+          Previous
+        </button>
+        <span style={{ margin: "0 10px" }}>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button className="hover:font-medium hover:cursor-pointer hover:text-sky-500"
+        onClick={handleNext} disabled={currentPage === totalPages}>
+          Next
+        </button>
       </div>
     </div>
   );

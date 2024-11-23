@@ -1,7 +1,9 @@
+"use client";
+import { useState, useContext } from "react";
 import { Package } from "@/types/package";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
-
+import { Contexts } from "@/app/Contexts";
 const packageData: Package[] = [
   {
     name: "Free package",
@@ -30,6 +32,28 @@ const packageData: Package[] = [
 ];
 
 const OrderTable = () => {
+  const{orders}: any = useContext(Contexts);
+  // console.log(orders);
+
+  const itemsPerPage = 8; // Số mục mỗi trang
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.ceil(packageData.length / itemsPerPage);
+  const handleNext = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
+
+  const getPaginatedData = () => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return packageData.slice(startIndex, startIndex + itemsPerPage);
+  };
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
       <div className=" inset-0 flex justify-start">
@@ -42,7 +66,7 @@ const OrderTable = () => {
           <input
             type="text"
             placeholder="Type to search..."
-            className="w-full bg-transparent pl-9 pr-4 font-medium focus:outline-none xl:w-125"
+            className="w-full bg-transparent pl-9 pr-4 font-medium focus:outline-none xl:w-11/12"
           />
         </div>
      </form>
@@ -67,7 +91,7 @@ const OrderTable = () => {
             </tr>
           </thead>
           <tbody>
-            {packageData.map((packageItem, key) => (
+            {getPaginatedData().map((packageItem, key) => (
               <tr key={key}>
                 <td className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
                   <h5 className="font-medium text-black dark:text-white">
@@ -133,6 +157,19 @@ const OrderTable = () => {
             ))}
           </tbody>
         </table>
+      </div>
+      <div className="flex justify-start pt-8 pf-3 pr-4 md:justify-center xl:justify-center lg:justify-center ">
+        <button className="hover:font-medium hover:cursor-pointer hover:text-sky-500"
+         onClick={handlePrevious} disabled={currentPage === 1}>
+          Previous
+        </button>
+        <span style={{ margin: "0 10px" }}>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button className="hover:font-medium hover:cursor-pointer hover:text-sky-500"
+        onClick={handleNext} disabled={currentPage === totalPages}>
+          Next
+        </button>
       </div>
     </div>
   );

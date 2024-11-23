@@ -1,50 +1,36 @@
+"use client";
+import { useState, useContext } from "react";
 import Image from "next/image";
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import { Contexts } from "@/app/Contexts";
 
-type Product = {
-  image: string;
-  name: string;
-  category: string;
-  price: number;
-  sold: number;
-};
-const productData: Product[] = [
-  {
-    image: "/images/product/product-01.png",
-    name: "Apple Watch Series 7",
-    category: "Electronics",
-    price: 296,
-    sold: 22,
-   
-  },
-  {
-    image: "/images/product/product-02.png",
-    name: "Macbook Pro M1",
-    category: "Electronics",
-    price: 546,
-    sold: 12,
-    
-  },
-  {
-    image: "/images/product/product-03.png",
-    name: "Dell Inspiron 15",
-    category: "Electronics",
-    price: 443,
-    sold: 64,
-    
-  },
-  {
-    image: "/images/product/product-04.png",
-    name: "HP Probook 450",
-    category: "Electronics",
-    price: 499,
-    sold: 72,
-    
-  },
-];
+
 
 const ProductTable = () => {
+  const{products}: any = useContext(Contexts)
+  
+  console.log(products)
+
+  const itemsPerPage = 8; // Số mục mỗi trang
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.ceil(products.length / itemsPerPage);
+  const handleNext = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
+
+  const getPaginatedData = () => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return products.slice(startIndex, startIndex + itemsPerPage);
+  };
   return (
 <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark relative">
   <div className=" inset-0 flex justify-start">
@@ -57,7 +43,7 @@ const ProductTable = () => {
           <input
             type="text"
             placeholder="Type to search..."
-            className="w-full bg-transparent pl-9 pr-4 font-medium focus:outline-none xl:w-125"
+            className="w-full bg-transparent pl-9 pr-4 font-medium focus:outline-none xl:w-11/12"
           />
         </div>
       </form>
@@ -72,11 +58,8 @@ const ProductTable = () => {
     <div className="col-span-2 hidden items-center sm:flex">
       <p className="font-bold">Category</p>
     </div>
-    <div className="col-span-1 flex items-center">
-      <p className="font-bold">Price</p>
-    </div>
-    <div className="col-span-1 flex items-center">
-      <p className="font-bold">Sold</p>
+    <div className="col-span-2 flex items-center ">
+      <p className="font-bold text-center w-full">Price</p>
     </div>
     <div className="col-span-1 flex items-center">
       <p className="font-bold">Action</p>
@@ -85,10 +68,10 @@ const ProductTable = () => {
 
 
 
-      {productData.map((product, key) => (
+      {getPaginatedData().map((product:any, key) => (
         <div
           className="grid grid-cols-6 border-t border-stroke px-4 py-4.5 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5"
-          key={key}
+          key={product._id}
         >
           <div className="col-span-3 flex items-center">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
@@ -110,14 +93,34 @@ const ProductTable = () => {
               {product.category}
             </p>
           </div>
-          <div className="col-span-1 flex items-center">
+          
+          <div className="col-span-2 flex flex-col gap-2 items-center">
+            <div className="flex flex-row w-1/2 justify-between">
             <p className="text-sm text-black dark:text-white">
-              ${product.price}
+              size {product.type[0].size}:
             </p>
+            <p className="text-sm text-black dark:text-white">
+              {product.type[0].price} VNĐ
+            </p>
+            </div>
+            <div className="flex flex-row w-1/2 justify-between">
+            <p className="text-sm text-black dark:text-white">
+              size {product.type[1].size}:
+            </p>
+            <p className="text-sm text-black dark:text-white">
+              {product.type[1].price} VNĐ
+            </p>
+            </div>
+            <div className="flex flex-row w-1/2 justify-between">
+            <p className="text-sm text-black dark:text-white">
+              size {product.type[2].size}:
+            </p>
+            <p className="text-sm text-black dark:text-white">
+              {product.type[2].price} VNĐ
+            </p>
+            </div>
           </div>
-          <div className="col-span-1 flex items-center">
-            <p className="text-sm text-black dark:text-white">{product.sold}</p>
-          </div>
+          
           <div className="col-span-1 flex items-center">
           <div className="flex items-center space-x-3.5">
                     <button className="hover:text-primary">
@@ -155,6 +158,19 @@ const ProductTable = () => {
           </div>
         </div>
       ))}
+      <div className="flex justify-start pt-8 pf-3 pr-4 md:justify-center xl:justify-center lg:justify-center ">
+        <button className="hover:font-medium hover:cursor-pointer hover:text-sky-500"
+         onClick={handlePrevious} disabled={currentPage === 1}>
+          Previous
+        </button>
+        <span style={{ margin: "0 10px" }}>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button className="hover:font-medium hover:cursor-pointer hover:text-sky-500"
+        onClick={handleNext} disabled={currentPage === totalPages}>
+          Next
+        </button>
+      </div>
     </div>
   );
 };

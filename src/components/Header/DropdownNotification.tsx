@@ -57,11 +57,10 @@ const DropdownNotification = () => {
                   href="#"
                 >
                   <p className="text-sm">
-                    <span className="text-black dark:text-white">
-                      Edit your information in a swipe
+                    <span className="text-black font-bold dark:text-white">
+                      Sth
                     </span>{" "}
-                    Sint occaecat cupidatat non proident, sunt in culpa qui
-                    officia deserunt mollit anim.
+                    Something about your device and you location my friend
                   </p>
 
                   <p className="text-xs">12 May, 2025</p>
@@ -73,10 +72,10 @@ const DropdownNotification = () => {
                   href="#"
                 >
                   <p className="text-sm">
-                    <span className="text-black dark:text-white">
-                      It is a long established fact
+                    <span className="text-black font-bold dark:text-white">
+                      Sth
                     </span>{" "}
-                    that a reader will be distracted by the readable.
+                    Something about your device and you location my friend
                   </p>
 
                   <p className="text-xs">24 Feb, 2025</p>
@@ -88,11 +87,10 @@ const DropdownNotification = () => {
                   href="#"
                 >
                   <p className="text-sm">
-                    <span className="text-black dark:text-white">
-                      There are many variations
+                    <span className="text-black font-bold dark:text-white">
+                      Sth
                     </span>{" "}
-                    of passages of Lorem Ipsum available, but the majority have
-                    suffered
+                    Something about your device and you location my friend
                   </p>
 
                   <p className="text-xs">04 Jan, 2025</p>
@@ -104,11 +102,10 @@ const DropdownNotification = () => {
                   href="#"
                 >
                   <p className="text-sm">
-                    <span className="text-black dark:text-white">
-                      There are many variations
+                    <span className="text-black font-bold dark:text-white">
+                      Sth
                     </span>{" "}
-                    of passages of Lorem Ipsum available, but the majority have
-                    suffered
+                    Something about your device and you location my friend
                   </p>
 
                   <p className="text-xs">01 Dec, 2024</p>

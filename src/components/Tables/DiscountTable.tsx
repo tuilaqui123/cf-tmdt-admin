@@ -1,145 +1,22 @@
 // import { Package } from "@/types/package";
 "use client";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import { Contexts } from "@/app/Contexts";
 
-type DiscountItem = {
-  name: string;
-  startDate: string;
-  expiredDate: string;
-  status: string;
-};
-const discountData: DiscountItem[] = [
-  {
-    name: "Free ++//package ++-/*",
-    
-    startDate: `Jan 13,2023`,
-    expiredDate: `Jan 13,2023`,
-    status: "Available",
-  },
-  {
-    name: "Standard Package",
-    
-    startDate: `Jan 13,2023`,
-    expiredDate: `Jan 13,2023`,
-    status: "Expired",
-  },
-  {
-    name: "Business Package",
-    
-    startDate: `Jan 13,2023`,
-    expiredDate: `Jan 13,2023`,
-    status: "Expired",
-  },
-  {
-    name: "Standard Package",
-    
-    startDate: `Jan 13,2023`,
-    expiredDate: `Jan 13,2023`,
-    status: "Available",
-  },
-  {
-    name: "Free ++//package ++-/*",
-    
-    startDate: `Jan 13,2023`,
-    expiredDate: `Jan 13,2023`,
-    status: "Available",
-  },
-  {
-    name: "Standard Package",
-    
-    startDate: `Jan 13,2023`,
-    expiredDate: `Jan 13,2023`,
-    status: "Expired",
-  },
-  {
-    name: "Free ++//package ++-/*",
-    
-    startDate: `Jan 13,2023`,
-    expiredDate: `Jan 13,2023`,
-    status: "Available",
-  },
-  {
-    name: "Standard Package",
-    
-    startDate: `Jan 13,2023`,
-    expiredDate: `Jan 13,2023`,
-    status: "Expired",
-  },
-  {
-    name: "Business Package",
-    
-    startDate: `Jan 13,2023`,
-    expiredDate: `Jan 13,2023`,
-    status: "Expired",
-  },
-  {
-    name: "Standard Package",
-    
-    startDate: `Jan 13,2023`,
-    expiredDate: `Jan 13,2023`,
-    status: "Available",
-  },
-  {
-    name: "Free ++//package ++-/*",
-    
-    startDate: `Jan 13,2023`,
-    expiredDate: `Jan 13,2023`,
-    status: "Available",
-  },
-  {
-    name: "Standard Package",
-    
-    startDate: `Jan 13,2023`,
-    expiredDate: `Jan 13,2023`,
-    status: "Expired",
-  },
-  {
-    name: "Free ++//package ++-/*",
-    
-    startDate: `Jan 13,2023`,
-    expiredDate: `Jan 13,2023`,
-    status: "Available",
-  },
-  {
-    name: "Standard Package",
-    
-    startDate: `Jan 13,2023`,
-    expiredDate: `Jan 13,2023`,
-    status: "Expired",
-  },
-  {
-    name: "Business Package",
-    
-    startDate: `Jan 13,2023`,
-    expiredDate: `Jan 13,2023`,
-    status: "Expired",
-  },
-  {
-    name: "Standard Package",
-    
-    startDate: `Jan 13,2023`,
-    expiredDate: `Jan 13,2023`,
-    status: "Available",
-  },
-  {
-    name: "Free ++//package ++-/*",
-    
-    startDate: `Jan 13,2023`,
-    expiredDate: `Jan 13,2023`,
-    status: "Available",
-  },
-  {
-    name: "Standard Package",
-    
-    startDate: `Jan 13,2023`,
-    expiredDate: `Jan 13,2023`,
-    status: "Expired",
-  },
-
-];
 
 const DiscountTable = () => {
+  const{vouchers}: any = useContext(Contexts);
+  // console.log(vouchers);
+  function formatDate(isoDate:any) {
+    const date = new Date(isoDate);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
+    const year = date.getFullYear();
+  
+    return `${day}/${month}/${year}`;
+  }
+
   function removeSpaces(input: string): any {
     let result = '';
     result = input.replace(/[^a-zA-Z0-9]/g, '');
@@ -148,7 +25,7 @@ const DiscountTable = () => {
     const itemsPerPage = 5; // Số mục mỗi trang
     const [currentPage, setCurrentPage] = useState(1);
   
-    const totalPages = Math.ceil(discountData.length / itemsPerPage);
+    const totalPages = Math.ceil(vouchers.length / itemsPerPage);
   
     const handleNext = () => {
       if (currentPage < totalPages) {
@@ -164,7 +41,7 @@ const DiscountTable = () => {
   
     const getPaginatedData = () => {
       const startIndex = (currentPage - 1) * itemsPerPage;
-      return discountData.slice(startIndex, startIndex + itemsPerPage);
+      return vouchers.slice(startIndex, startIndex + itemsPerPage);
     };
 
   return (
@@ -191,34 +68,34 @@ const DiscountTable = () => {
             </tr>
           </thead>
           <tbody>
-            {getPaginatedData().map((discount: DiscountItem, key: number) => (
+            {getPaginatedData().map((voucher: any, key: number) => (
               <tr key={key}>
                 <td className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
                   <h5 className="font-medium text-black dark:text-white uppercase">
-                    {removeSpaces(discount.name)}
+                    {removeSpaces(voucher.name)}
                   </h5>   
                   
                 </td>
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                    {discount.startDate}
+                    {formatDate(voucher.startDay)}
                   </p>
                 </td>
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                    {discount.expiredDate}
+                    {formatDate(voucher.endDay)}
                   </p>
                 </td>
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                   <p
                     className={`inline-flex rounded-full bg-opacity-10 px-3 py-1 text-sm font-medium ${
-                      discount.status === "Available"
+                      voucher.status === "Available"
                         ? "bg-success text-success"
                         : "bg-danger text-danger"
 
                     }`}
                   >
-                    {discount.status}
+                    {voucher.status}
                   </p>
                 </td>
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
