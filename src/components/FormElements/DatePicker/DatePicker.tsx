@@ -1,19 +1,30 @@
 "use client";
 import flatpickr from "flatpickr";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 interface DatePickerProps {
   title: string;
+  onDateChange: (selectedDate: string) => void; // Prop nhận callback từ component cha
 }
-const DatePicker: React.FC<DatePickerProps> = ({ title }) => {
+
+const DatePicker: React.FC<DatePickerProps> = ({ title, onDateChange }) => {
+  const inputRef = useRef<HTMLInputElement>(null); // Dùng ref để truy cập input
+
   useEffect(() => {
-    flatpickr(".form-datepicker", {
+    if (!inputRef.current) return;
+
+    flatpickr(inputRef.current, {
       mode: "single",
       static: true,
       monthSelectorType: "static",
-      dateFormat: "d/m/Y", // Updated format
+      dateFormat: "d/m/Y",
+      onChange: (selectedDates) => {
+        if (selectedDates.length > 0) {
+          onDateChange(selectedDates[0].toLocaleDateString("en-GB")); // Gọi callback khi ngày thay đổi
+        }
+      },
     });
-  }, []);
+  }, [onDateChange]);
 
   return (
     <div>
@@ -22,11 +33,11 @@ const DatePicker: React.FC<DatePickerProps> = ({ title }) => {
       </label>
       <div className="relative">
         <input
+          ref={inputRef}
           className="form-datepicker w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-          placeholder="dd/mm/yyyy" // Updated placeholder
+          placeholder="dd/mm/yyyy"
           data-class="flatpickr-right"
         />
-
         <div className="pointer-events-none absolute inset-0 left-auto right-5 flex items-center">
           <svg
             width="18"

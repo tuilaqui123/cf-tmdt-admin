@@ -1,7 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { Contexts } from "@/app/Contexts";
 
-const SelectOption: React.FC = () => {
+interface SelectCategoryOptionProps {
+  onCategoryChange: (category: string) => void;
+}
+const SelectCategoryOption: React.FC<SelectCategoryOptionProps> = ({onCategoryChange}) => {
+  const {categories}:any = useContext(Contexts)
   const [selectedOption, setSelectedOption] = useState<string>("");
   const [isOptionSelected, setIsOptionSelected] = useState<boolean>(false);
 
@@ -9,11 +14,6 @@ const SelectOption: React.FC = () => {
     setIsOptionSelected(true);
   };
 
-  const options = [
-    { _id: "1", name: "Cold" },
-    { _id: "2", name: "Hot" },
-    { _id: "3", name: "SIU" },
-  ];
 
   return (
     <div className="mb-4.5">
@@ -22,23 +22,24 @@ const SelectOption: React.FC = () => {
         Product Category{" "}
       </label>
 
-      <div className="relative z-20 bg-transparent dark:bg-form-input">
+      <div className=" capitalize relative z-20 bg-transparent dark:bg-form-input">
       <select
           value={selectedOption}
           onChange={(e:any) => {
             setSelectedOption(e.target.value);
+            onCategoryChange(e.target.value);
             changeTextColor();
           }}
-          className={`relative z-20 w-full appearance-none rounded border border-stroke bg-transparent px-5 py-3 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary ${
+          className={`capitalize relative z-20 w-full appearance-none rounded border border-stroke bg-transparent px-5 py-3 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary ${
             isOptionSelected ? "text-black dark:text-white" : ""
           }`}
         >
           <option value="" disabled className="text-body dark:text-bodydark">
             Select product category
           </option>
-          {options.map((option) => (
-            <option key={option._id} value={option.name} className="text-body dark:text-bodydark">
-              {option.name}
+          {categories.map((option:any) => (
+            <option key={option._id} value={option._id} className="text-body capitalize dark:text-bodydark">
+              {option._id}
             </option>
           ))}
         </select>
@@ -67,4 +68,4 @@ const SelectOption: React.FC = () => {
   );
 };
 
-export default SelectOption;
+export default SelectCategoryOption;

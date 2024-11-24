@@ -3,6 +3,7 @@
 import { useState, useContext } from "react";
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import { Contexts } from "@/app/Contexts";
+import axios from "axios";
 
 
 const DiscountTable = () => {
@@ -16,6 +17,25 @@ const DiscountTable = () => {
   
     return `${day}/${month}/${year}`;
   }
+  const [status, setStatus] = useState("");
+  const checkStatus = (_id: any):any => {
+    fetch("http://localhost:8081/v1/api/user/vouchers/checkVoucher", {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: JSON.stringify({
+          "id": _id
+      })
+  })
+      .then(res => res.json())
+      .then((data => {
+        setStatus(data.message)
+      })
+
+      )
+  };
 
   function removeSpaces(input: string): any {
     let result = '';
@@ -87,7 +107,7 @@ const DiscountTable = () => {
                   </p>
                 </td>
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-                  <p
+                  {/* <p
                     className={`inline-flex rounded-full bg-opacity-10 px-3 py-1 text-sm font-medium ${
                       voucher.status === "Available"
                         ? "bg-success text-success"
@@ -96,6 +116,10 @@ const DiscountTable = () => {
                     }`}
                   >
                     {voucher.status}
+                  </p> */}
+                  <p>
+                  {/* {checkStatus(voucher._id)} */}
+                  
                   </p>
                 </td>
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
