@@ -1,18 +1,18 @@
 "use client";
-import React, { useState, useEffect, useContext } from "react";
-import { Contexts } from "@/app/Contexts";
+import React, { useState, useEffect,  } from "react";
 
-interface SelectCategoryOptionProps {
-  onCategoryChange: (category: string) => void;
+
+interface OrderStatusOptionProps {
+    onStatusChange: (category: string) => void;
   value: string;
 }
 
-const SelectCategoryOption: React.FC<SelectCategoryOptionProps> = ({ value, onCategoryChange }) => {
-  const { categories }: any = useContext(Contexts);
+const ProductStatusOption: React.FC<OrderStatusOptionProps> = ({ value, onStatusChange }) => {
+
   const [selectedOption, setSelectedOption] = useState<string>(value || ""); // Khởi tạo bằng giá trị từ props
   const [isOptionSelected, setIsOptionSelected] = useState<boolean>(!!value); // Đổi màu nếu có giá trị ban đầu
 
-  // Cập nhật trạng thái khi giá trị "value" thay đổi
+  
   useEffect(() => {
     setSelectedOption(value);
     setIsOptionSelected(!!value);
@@ -22,13 +22,13 @@ const SelectCategoryOption: React.FC<SelectCategoryOptionProps> = ({ value, onCa
     const newValue = e.target.value;
     setSelectedOption(newValue);
     setIsOptionSelected(true);
-    onCategoryChange(newValue);
+    onStatusChange(newValue);
   };
 
   return (
     <div className="mb-4.5">
       <label className="mb-2.5 block text-black dark:text-white">
-        Product Category
+      Select Product Status
       </label>
 
       <div className="capitalize relative z-20 bg-transparent dark:bg-form-input">
@@ -40,17 +40,24 @@ const SelectCategoryOption: React.FC<SelectCategoryOptionProps> = ({ value, onCa
           }`}
         >
           <option value="" disabled className="text-body dark:text-bodydark">
-            Select product category
+            Select Stock Option
           </option>
-          {categories.map((option: any) => (
+          
             <option
-              key={option._id}
-              value={option._id}
+              
+              value="true"
               className="text-body capitalize dark:text-bodydark"
             >
-              {option.name}
+              Available
             </option>
-          ))}
+            <option
+              
+              value="false"
+              className="text-body capitalize dark:text-bodydark"
+            >
+              Sold Out
+            </option>
+        
         </select>
 
         <span className="absolute right-4 top-1/2 z-30 -translate-y-1/2">
@@ -77,4 +84,4 @@ const SelectCategoryOption: React.FC<SelectCategoryOptionProps> = ({ value, onCa
   );
 };
 
-export default SelectCategoryOption;
+export default ProductStatusOption;

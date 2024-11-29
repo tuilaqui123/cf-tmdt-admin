@@ -8,7 +8,7 @@ import DefaultLayout from "@/components/Layouts/DefaultLayout";
 const Settings = () => {
   return (
     <DefaultLayout>
-      <div className="mx-auto max-w-270">
+      <div className="mx-auto max-w-full">
         <Breadcrumb pageName="Settings" />
 
         <div className="grid grid-cols-5 gap-8">

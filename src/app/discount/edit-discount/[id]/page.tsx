@@ -2,29 +2,54 @@
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import DatePicker from "@/components/FormElements/DatePicker/DatePicker";
-import { useState, useCallback, useContext } from "react";
+import { useState, useCallback, useContext, useEffect } from "react";
 import VoucherTypeOption from "@/components/SelectGroup/VoucherTypeOption";
 import { Contexts } from "@/app/Contexts";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-// import { usePathname } from "next/navigation";
-const AddDiscount = () => {
+import axios from "axios";
+const EditDiscount = ({ params }: { params: { id: string } }) => {
+  const { id } = params; // Trích xuất `name` từ URL
+
   const [discountCode, setDiscountCode] = useState("");
   const [startDate, setStartDate] = useState<string>("");
   const [expiredtDate, setExpiredDate] = useState<string>("");
   const [type, setType] = useState<string>("");
   const [discountValue, setDiscountValue] = useState(0);
 
-const {fetchVouchers}:any = useContext(Contexts)
-const router = useRouter();
+  const { fetchVouchers }: any = useContext(Contexts);
+  const router = useRouter();
   function convertDateFormat(date: string): string {
     const [day, month, year] = date.split("/");
     return `${year}-${month}-${day}`;
   }
   function convertToDate(date: string): Date {
-    const [day, month, year] = date.split('/');
+    const [day, month, year] = date.split("/");
     return new Date(`${year}-${month}-${day}`);
   }
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8081/v1/api/user/vouchers/` + id)
+      .then((res) => {
+        setDiscountCode(res.data.name);
+        let sDate = new Date(res.data.startDay);
+        const formattedSDate = `${String(sDate.getDate()).padStart(2, "0")}/${String(sDate.getMonth() + 1).padStart(2, "0")}/${sDate.getFullYear()}`;
+        setStartDate(formattedSDate);
+
+        let eDate = new Date(res.data.endDay);
+        const formattedEDate = `${String(eDate.getDate()).padStart(2, "0")}/${String(eDate.getMonth() + 1).padStart(2, "0")}/${eDate.getFullYear()}`;
+        setExpiredDate(formattedEDate);
+        setType(res.data.type[0].toUpperCase() + res.data.type.slice(1));
+
+        // console.log(res.data.phongBan)
+        setDiscountValue(res.data.value);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [id]);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     if (!discountCode) {
@@ -82,8 +107,8 @@ const router = useRouter();
       })
       return;
     }
-    fetch("http://localhost:8081/v1/api/user/vouchers", {
-      method: "POST",
+    fetch(`http://localhost:8081/v1/api/user/vouchers/${id}`, {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
@@ -100,15 +125,17 @@ const router = useRouter();
 
           console.log(data);
           fetchVouchers()
-          toast.success("Tạo voucher thành công", {
+          toast.success("Sửa voucher thành công", {
             position: "top-right",
-            autoClose: 2000,
+            autoClose: 2000,  // Đảm bảo toast tự động đóng sau 2 giây
+            onClose: () => {
+              router.push("/discount"); // Chuyển hướng khi toast đóng
+            }
           });
-          router.push("/discount"); 
   })
       .catch((err) => {
         console.error(err);
-        toast.error("Tạo voucher thất bại", {
+        toast.error("Sửa voucher thất bại", {
           position: "top-right",
           autoClose: 2000,
         });
@@ -144,13 +171,14 @@ const router = useRouter();
     setType(selectedType);
     console.log("Type đã chọn:", selectedType); // Xử lý giá trị tại đây
   };
+
   return (
     <DefaultLayout>
       <Breadcrumb
         items={[
           { name: "Dashboard", href: "/" },
           { name: "Discount", href: "/discount" },
-          { name: "Add Discount" },
+          { name: "Edit Discount" },
         ]}
       />
       <div className="flex flex-col gap-10">
@@ -171,20 +199,21 @@ const router = useRouter();
               </div>
               <div className="mb-4.5">
                 <DatePicker
-                value={startDate}
                   title="Select Start Date"
+                  value={startDate} // Truyền giá trị khởi tạo
                   onDateChange={handleStartDateChange}
                 />
               </div>
               <div className="mb-4.5">
                 <DatePicker
-                value={expiredtDate}
                   title="Select Expired Date"
+                  value={expiredtDate} // Truyền giá trị khởi tạo
                   onDateChange={handleExpiredDateChange}
                 />
               </div>
+
               <div className="mb-4.5">
-                <VoucherTypeOption value={type} onVoucherChange={handleTypeChange} />
+                <VoucherTypeOption onVoucherChange={handleTypeChange} value={type} />
               </div>
               {type == "Trade" ? (
                 <div className="mb-4.5">
@@ -217,9 +246,10 @@ const router = useRouter();
               )}
 
               <button
-              onClick={handleSubmit} 
-              className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">
-                Add
+                onClick={handleSubmit}
+                className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90"
+              >
+                Edit
               </button>
             </div>
           </form>
@@ -229,4 +259,4 @@ const router = useRouter();
   );
 };
 
-export default AddDiscount;
+export default EditDiscount;

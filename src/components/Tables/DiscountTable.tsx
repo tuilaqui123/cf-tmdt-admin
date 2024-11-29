@@ -1,42 +1,97 @@
-// import { Package } from "@/types/package";
+
 "use client";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import { Contexts } from "@/app/Contexts";
 import axios from "axios";
+import { toast } from "react-toastify";
+import Link from "next/link";
 
+const DiscountTable = ({filterStatus, setFilterStatus }) => {
+  const{vouchers, fetchVouchers}: any = useContext(Contexts);
+  const [vouchersUpdate, setVouchersUpdate] = useState(vouchers);
+  const [searchInput, setSearchInput] = useState("");
+  const [searchVouchers, setSearchVouchers] = useState([]);
+  
 
-const DiscountTable = () => {
-  const{vouchers}: any = useContext(Contexts);
-  // console.log(vouchers);
+  console.log(vouchers);
   function formatDate(isoDate:any) {
     const date = new Date(isoDate);
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
     const year = date.getFullYear();
-  
     return `${day}/${month}/${year}`;
   }
-  const [status, setStatus] = useState("");
-  const checkStatus = (_id: any):any => {
-    fetch("http://localhost:8081/v1/api/user/vouchers/checkVoucher", {
-      method: "POST",
-      headers: {
-          "Content-Type": "application/json",
-          // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: JSON.stringify({
-          "id": _id
-      })
-  })
-      .then(res => res.json())
-      .then((data => {
-        setStatus(data.message)
-      })
+  
+  const updateVoucherStatus = (vouchersUpdate: any[]) => {
+    const today = new Date();
+    return vouchersUpdate.map((voucher) => {
+      const startDay = new Date(voucher.startDay);
+      const endDay = new Date(voucher.endDay);
 
-      )
+      let status = "";
+      if (today < startDay) {
+        status = "pending";
+      } else if (today >= startDay && today <= endDay) {
+        status = "available";
+      } else {
+        status = "expired";
+      }
+
+      return { ...voucher, status };
+    });
   };
 
+  
+
+  // Update vouchers with status on mount
+  useEffect(() => {
+    const updatedVouchers = updateVoucherStatus(vouchers);
+    setVouchersUpdate(updatedVouchers);
+  }, [vouchers]);
+  
+
+  useEffect(() => {
+    let filtered = vouchersUpdate;
+    
+    if (filterStatus !== "all") {
+      filtered = vouchersUpdate.filter(voucher => voucher.status === filterStatus);
+    }
+    
+    const searchQuery = searchInput.trim().toLowerCase();
+    const temp = filtered.filter(voucher =>
+      voucher.name.toLowerCase().includes(searchQuery)
+    );
+    
+    setSearchVouchers(temp);
+  }, [searchInput, vouchersUpdate, filterStatus]);
+  
+  const handleDeleteVoucher = (voucherId: string) => {
+    axios
+      .delete(`http://localhost:8081/v1/api/user/vouchers/${voucherId}`)
+      .then((response) => {
+        if (response.data.success == true) {
+          toast.success("Xóa voucher thành công", {
+            position: "top-right",
+            autoClose: 2000
+          })
+          fetchVouchers();
+        } else {
+          toast.error("Xóa voucher thất bại", {
+            position: "top-right",
+            autoClose: 2000
+          })
+        }
+      })
+      .catch((error) => {
+        console.error("Error deleting product:", error);
+        toast.error("Đã xảy ra lỗi khi xóa voucher", {
+          position: "top-right",
+          autoClose: 2000
+        })
+      });
+  };
   function removeSpaces(input: string): any {
     let result = '';
     result = input.replace(/[^a-zA-Z0-9]/g, '');
@@ -45,7 +100,7 @@ const DiscountTable = () => {
     const itemsPerPage = 5; // Số mục mỗi trang
     const [currentPage, setCurrentPage] = useState(1);
   
-    const totalPages = Math.ceil(vouchers.length / itemsPerPage);
+    const totalPages = Math.ceil(searchVouchers.length / itemsPerPage);
   
     const handleNext = () => {
       if (currentPage < totalPages) {
@@ -61,11 +116,34 @@ const DiscountTable = () => {
   
     const getPaginatedData = () => {
       const startIndex = (currentPage - 1) * itemsPerPage;
-      return vouchers.slice(startIndex, startIndex + itemsPerPage);
+      const sortedOrders = [...searchVouchers].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    
+      
+      return sortedOrders.slice(startIndex, startIndex + itemsPerPage);
     };
+
+
 
   return (
     <div className="flex flex-col rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+      <div className=" inset-0 flex justify-start">
+        <div className=" w-full px-4 py-5 sm:block">
+          <form action="#" method="POST">
+            <div className="relative">
+              <button className="absolute left-0 top-1/2 -translate-y-1/2">
+                <SearchOutlinedIcon />
+              </button>
+              <input
+                type="text"
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                placeholder="Type to search..."
+                className="w-full bg-transparent pl-9 pr-4 font-medium focus:outline-none xl:w-11/12"
+              />
+            </div>
+          </form>
+        </div>
+      </div>
       <div className="max-w-full overflow-x-auto">
         <table className="w-full table-auto">
           <thead>
@@ -107,27 +185,36 @@ const DiscountTable = () => {
                   </p>
                 </td>
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-                  {/* <p
-                    className={`inline-flex rounded-full bg-opacity-10 px-3 py-1 text-sm font-medium ${
-                      voucher.status === "Available"
+                  <p
+                    className={` capitalize inline-flex rounded-full bg-opacity-10 px-3 py-1 text-sm font-medium ${
+                      voucher.status === "available"
                         ? "bg-success text-success"
-                        : "bg-danger text-danger"
+                        : 
+                        voucher.status === "pending"
+                        ? "bg-warning text-warning"
+                        :
+                        "bg-danger text-danger"
 
                     }`}
                   >
                     {voucher.status}
-                  </p> */}
-                  <p>
-                  {/* {checkStatus(voucher._id)} */}
-                  
                   </p>
+                 
                 </td>
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                   <div className="flex items-center space-x-3.5">
-                    <button className="hover:text-primary">
+                    <Link 
+                    href={`/discount/edit-discount/${voucher._id}`}
+                    className="hover:text-primary">
                       <ModeEditIcon/>
-                    </button>
-                    <button className="hover:text-red-500">
+                    </Link>
+                    <button 
+                    onClick={() => {
+                      if (window.confirm("Bạn có chắc chắn muốn xóa voucher này không?")) {
+                        handleDeleteVoucher(voucher._id);
+                      }
+                    }}
+                    className="hover:text-red-500">
                       <svg
                         className="fill-current"
                         width="18"

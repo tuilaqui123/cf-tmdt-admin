@@ -1,24 +1,23 @@
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 
-import OrderOverViewTable from "@/components/Tables/OrderOverview";
 
 
+import RevenueChart from "@/components/Dashboard/RevenueChart";
 import { Metadata } from "next";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 
 
 
-const TablesPage = () => {
+const Revenue = () => {
   return (
     <DefaultLayout>
-      <Breadcrumb pageName="Order Table" />
+      <Breadcrumb pageName="Revenue" />
 
       <div className="flex flex-col gap-10">
-        
-        <OrderOverViewTable />
+      <RevenueChart />
       </div>
     </DefaultLayout>
   );
 };
 
-export default TablesPage;
+export default Revenue;

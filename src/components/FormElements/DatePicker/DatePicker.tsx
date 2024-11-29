@@ -1,30 +1,34 @@
-"use client";
 import flatpickr from "flatpickr";
 import { useEffect, useRef } from "react";
 
 interface DatePickerProps {
   title: string;
-  onDateChange: (selectedDate: string) => void; // Prop nhận callback từ component cha
+  value: string; // Thêm prop nhận giá trị khởi tạo
+  onDateChange: (selectedDate: string) => void; // Callback khi ngày thay đổi
 }
 
-const DatePicker: React.FC<DatePickerProps> = ({ title, onDateChange }) => {
-  const inputRef = useRef<HTMLInputElement>(null); // Dùng ref để truy cập input
+const DatePicker: React.FC<DatePickerProps> = ({ title, value, onDateChange }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!inputRef.current) return;
 
-    flatpickr(inputRef.current, {
+    const fp = flatpickr(inputRef.current, {
       mode: "single",
       static: true,
       monthSelectorType: "static",
       dateFormat: "d/m/Y",
+      defaultDate: value, // Set giá trị khởi tạo
       onChange: (selectedDates) => {
         if (selectedDates.length > 0) {
-          onDateChange(selectedDates[0].toLocaleDateString("en-GB")); // Gọi callback khi ngày thay đổi
+          onDateChange(selectedDates[0].toLocaleDateString("en-GB"));
         }
       },
     });
-  }, [onDateChange]);
+
+    // Cleanup để tránh trùng lặp khi prop `value` thay đổi
+    return () => fp.destroy();
+  }, [value, onDateChange]);
 
   return (
     <div>

@@ -52,10 +52,9 @@ const menuGroups = [
         route: "#",
         children: [
           { label: "Revenue", route: "/revenue" }, 
-          { label: "Order", route: "/order"},
-          { label: "Customer", route: "/customer" },
-          { label: "Product", route: "/product" },
-          { label: "Discount", route: "/discount" }
+          { label: "Category Analystics", route: "/category-analytics"},
+          { label: "Top Selling", route: "/top-selling" }
+
          ],
         
       },
@@ -68,7 +67,7 @@ const menuGroups = [
         children: [
           { label: "Overview", route: "/product/overview"},
           { label: "Category", route: "/product/category"},
-          { label: "Ingredient", route: "/product/ingredient"}],
+          ],
       },
       {
         icon: (
@@ -95,9 +94,7 @@ const menuGroups = [
         ),
         label: "Discount",
         route: "/discount",
-        // children: [
-        //   { label: "", route: "/discount/add-discount" },
-        // ],
+
 
       },
      

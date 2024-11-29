@@ -2,12 +2,15 @@
 import { useState, useContext } from "react";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
+
+import axios from "axios";
+import { toast } from "react-toastify";
 import { Contexts } from "@/app/Contexts";
 
 
-
 const ProductCategoryTable = () => {
-  const{categories}: any = useContext(Contexts)
+   
+  const{categories, fetchCategories}: any = useContext(Contexts)
   
   const itemsPerPage = 8; // Số mục mỗi trang
   const [currentPage, setCurrentPage] = useState(1);
@@ -15,18 +18,53 @@ const ProductCategoryTable = () => {
   const handleNext = () => {
     if (currentPage < totalPages) {
       setCurrentPage((prev) => prev + 1);
+      window.scrollTo(0, 0); // Cuộn lên đầu trang
     }
   };
 
   const handlePrevious = () => {
     if (currentPage > 1) {
       setCurrentPage((prev) => prev - 1);
+      window.scrollTo(0, 0); // Cuộn lên đầu trang
+    }
+  };
+
+  const handlePageInputChange = (e) => {
+    const inputValue = parseInt(e.target.value, 10);
+
+    if (!isNaN(inputValue) && inputValue >= 1 && inputValue <= totalPages) {
+      setCurrentPage(inputValue);
     }
   };
 
   const getPaginatedData = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     return categories.slice(startIndex, startIndex + itemsPerPage);
+  };
+  const handleDeleteCategory = (categoryID: string) => {
+    axios
+      .delete(`http://localhost:8081/v1/api/user/categories/${categoryID}`)
+      .then((response) => {
+        if (response.data.success == true) {
+          toast.success("Xóa category thành công", {
+            position: "top-right",
+            autoClose: 2000
+          })
+          fetchCategories();
+        } else {
+          toast.error("Xóa category thất bại", {
+            position: "top-right",
+            autoClose: 2000
+          })
+        }
+      })
+      .catch((error) => {
+        console.error("Error deleting product:", error);
+        toast.error("Đã xảy ra lỗi khi xóa category", {
+          position: "top-right",
+          autoClose: 2000
+        })
+      });
   };
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
@@ -62,8 +100,8 @@ const ProductCategoryTable = () => {
             {getPaginatedData().map((category:any, key) => (
               <tr key={category._id}>
                 <td className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
-                  <h5 className="font-medium text-black dark:text-white">
-                    {category._id}
+                  <h5 className="font-medium text-black dark:text-white capitalize">
+                    {category.name}
                   </h5>
                   
                 </td>
@@ -72,7 +110,13 @@ const ProductCategoryTable = () => {
                     <button className="hover:text-primary">
                      <ModeEditIcon/>
                     </button>
-                    <button className="hover:text-primary">
+                    <button 
+                    onClick={() => {
+                      if (window.confirm("Bạn có chắc chắn muốn xóa category này không?")) {
+                        handleDeleteCategory(category._id);
+                      }
+                    }}
+                    className="hover:text-primary">
                       <svg
                         className="fill-current"
                         width="18"
@@ -107,18 +151,34 @@ const ProductCategoryTable = () => {
           </tbody>
         </table>
       </div>
-      <div className="flex justify-start pt-8 pf-3 pr-4 md:justify-center xl:justify-center lg:justify-center ">
-        <button className="hover:font-medium hover:cursor-pointer hover:text-sky-500"
-         onClick={handlePrevious} disabled={currentPage === 1}>
+      <div className="pf-3 flex justify-start pr-4 pt-8 md:justify-center lg:justify-center xl:justify-center ">
+        <button
+          className="hover:cursor-pointer hover:font-medium hover:text-sky-500"
+          onClick={handlePrevious}
+          disabled={currentPage === 1}
+        >
           Previous
         </button>
-        <span style={{ margin: "0 10px" }}>
-          Page {currentPage} of {totalPages}
-        </span>
-        <button className="hover:font-medium hover:cursor-pointer hover:text-sky-500"
-        onClick={handleNext} disabled={currentPage === totalPages}>
+        <div className="m-3">
+          <input
+            type="number"
+            value={currentPage}
+            onChange={(e) => handlePageInputChange(e)}
+            min="1"
+            max={totalPages}
+            className=" w-16 rounded border text-center"
+          />
+          <span className="ml-1">of {totalPages} </span>
+        </div>
+        <button
+          className="hover:cursor-pointer hover:font-medium hover:text-sky-500"
+          onClick={handleNext}
+          disabled={currentPage === totalPages}
+        >
           Next
         </button>
+
+        {/* Thêm ô nhập số trang */}
       </div>
     </div>
   );

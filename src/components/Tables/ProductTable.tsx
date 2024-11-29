@@ -4,8 +4,9 @@ import Image from "next/image";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import { Contexts } from "@/app/Contexts";
-
+import { toast } from "react-toastify";
 import axios from "axios";
+import Link from "next/link";
 const ProductTable = () => {
   
   const { products, fetchProducts }: any = useContext(Contexts);
@@ -30,15 +31,24 @@ const ProductTable = () => {
       .delete(`http://localhost:8081/v1/api/user/products/${productId}`)
       .then((response) => {
         if (response.data.success == true) {
-          alert("Xóa sản phẩm thành công!");
+          toast.success("Xóa sản phẩm thành công", {
+            position: "top-right",
+            autoClose: 2000
+          })
           fetchProducts();
         } else {
-          alert("Xóa sản phẩm thất bại!");
+          toast.error("Xóa sản phẩm thất bại", {
+            position: "top-right",
+            autoClose: 2000
+          })
         }
       })
       .catch((error) => {
         console.error("Error deleting product:", error);
-        alert("Đã xảy ra lỗi khi xóa sản phẩm.");
+        toast.error("Đã xảy ra lỗi khi xóa sản phẩm", {
+          position: "top-right",
+          autoClose: 2000
+        })
       });
   };
 
@@ -48,21 +58,34 @@ const ProductTable = () => {
   const handleNext = () => {
     if (currentPage < totalPages) {
       setCurrentPage((prev) => prev + 1);
+      window.scrollTo(0, 0); // Cuộn lên đầu trang
     }
   };
 
   const handlePrevious = () => {
     if (currentPage > 1) {
       setCurrentPage((prev) => prev - 1);
+      window.scrollTo(0, 0); // Cuộn lên đầu trang
+    }
+  };
+
+  const handlePageInputChange = (e) => {
+    const inputValue = parseInt(e.target.value, 10);
+
+    if (!isNaN(inputValue) && inputValue >= 1 && inputValue <= totalPages) {
+      setCurrentPage(inputValue);
     }
   };
 
   const getPaginatedData = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
-    return searchProducts.slice(startIndex, startIndex + itemsPerPage);
+    const sortedOrders = [...searchProducts].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    
+      
+    return sortedOrders.slice(startIndex, startIndex + itemsPerPage);
   };
   return (
-    <div className="relative rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+    <div className="mb-5 rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
       <div className=" inset-0 flex justify-start">
         <div className=" w-full px-4 py-5 sm:block">
           <form action="#" method="POST">
@@ -82,24 +105,33 @@ const ProductTable = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-6 border-t border-stroke px-4 py-4.5 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
+      <div className="grid grid-cols-9  border-t border-stroke px-4 py-4.5 dark:border-strokedark md:px-6 2xl:px-7.5">
         <div className="col-span-3 flex items-center">
           <p className="font-bold">Product Name</p>
         </div>
-        <div className="col-span-2 hidden items-center sm:flex">
+        <div className="col-span-1 hidden items-center sm:flex">
+          <p className="font-bold">Status</p>
+        </div>
+        <div className="col-span-1 hidden items-center sm:flex">
           <p className="font-bold">Category</p>
         </div>
         <div className="col-span-2 flex items-center ">
           <p className="w-full text-center font-bold">Price</p>
         </div>
-        <div className="col-span-1 flex items-center">
+        <div className="col-span-1 flex items-center justify-center">
+          <p className="font-bold">Discount (%)</p>
+        </div>
+        <div className="col-span-1 flex items-center justify-center">
           <p className="font-bold">Action</p>
         </div>
       </div>
 
       {getPaginatedData().map((product: any, key) => (
         <div
-          className="grid grid-cols-6 border-t border-stroke px-4 py-4.5 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5"
+        className={key % 2 != 0 
+          ? "bg-gray-100 dark:bg-gray-800 grid grid-cols-9  px-4 py-4.5 md:px-6 2xl:px-7.5" 
+          : "grid grid-cols-9 px-4 py-4.5 dark:border-strokedark md:px-6 2xl:px-7.5"}
+          
           key={product._id}
         >
           <div className="col-span-3 flex items-center">
@@ -107,9 +139,9 @@ const ProductTable = () => {
               <div className="h-12.5 w-15 rounded-md">
                 <Image
                   src={product.image}
-                  width={60}
-                  height={50}
-                  alt="Product"
+                  width={70}
+                  height={60}
+                  alt={product.name}
                 />
               </div>
               <p className="text-sm text-black dark:text-white">
@@ -117,9 +149,21 @@ const ProductTable = () => {
               </p>
             </div>
           </div>
-          <div className="col-span-2 hidden items-center sm:flex">
-            <p className="text-sm text-black dark:text-white">
-              {product.category}
+          <div className="col-span-1 hidden items-center sm:flex">
+          {product.isStock?
+          (<p className="capitalize text-sm text-green-600 dark:text-white">
+              Available
+              </p>)
+              :(
+                <p className="capitalize text-sm text-danger dark:text-white">
+              Sold Out
+              </p>
+              )}
+            
+          </div>
+          <div className="col-span-1 hidden items-center sm:flex">
+            <p className="capitalize text-sm text-black dark:text-white">
+              {product.categoryId.name}
             </p>
           </div>
 
@@ -136,13 +180,25 @@ const ProductTable = () => {
             ))}
           </div>
 
-          <div className="col-span-1 flex items-center">
+          <div className="col-span-1 hidden items-center sm:flex justify-center">
+            <p className="text-sm text-black dark:text-white">
+              {product.discount}
+            </p>
+          </div>
+
+          <div className="col-span-1 flex items-center justify-center">
             <div className="flex items-center space-x-3.5">
-              <button className="hover:text-primary">
-                <ModeEditIcon />
-              </button>
+            <Link 
+                    href={`/product/overview/edit-product/${product._id}`}
+                    className="hover:text-primary">
+                      <ModeEditIcon/>
+                    </Link>
               <button 
-              onClick={() => handleDeleteProduct(product._id)}
+             onClick={() => {
+              if (window.confirm("Bạn có chắc chắn muốn xóa sản phẩm này không?")) {
+                handleDeleteProduct(product._id);
+              }
+            }}
               className="hover:text-red-500">
                 <svg
                   className="fill-current"
@@ -182,9 +238,17 @@ const ProductTable = () => {
         >
           Previous
         </button>
-        <span style={{ margin: "0 10px" }}>
-          Page {currentPage} of {totalPages}
-        </span>
+        <div className="m-3">
+          <input
+            type="number"
+            value={currentPage}
+            onChange={(e) => handlePageInputChange(e)}
+            min="1"
+            max={totalPages}
+            className=" w-16 rounded border text-center"
+          />
+          <span className="ml-1">of {totalPages} </span>
+        </div>
         <button
           className="hover:cursor-pointer hover:font-medium hover:text-sky-500"
           onClick={handleNext}
@@ -192,6 +256,8 @@ const ProductTable = () => {
         >
           Next
         </button>
+
+        {/* Thêm ô nhập số trang */}
       </div>
     </div>
   );

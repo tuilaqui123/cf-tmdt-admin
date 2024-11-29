@@ -26,7 +26,7 @@ export const AppProvider = ({ children }) => {
             });
     };
     const fetchCategories = () => {
-        axios.get("http://localhost:8081/v1/api/user/products/categories")
+        axios.get("http://localhost:8081/v1/api/user/categories")
             .then((res) => {
                
                 setCategories(res.data);
@@ -45,7 +45,7 @@ export const AppProvider = ({ children }) => {
                 console.log(err);
             });
     };
-    const fetchVoucers = () => {
+    const fetchVouchers = () => {
         axios.get("http://localhost:8081/v1/api/user/vouchers")
             .then((res) => {
                 
@@ -70,7 +70,7 @@ export const AppProvider = ({ children }) => {
         fetchProducts();
         fetchCategories();
         fetchUsers();
-        fetchVoucers();
+        fetchVouchers();
         fetchOrders();
     }, []);
     
@@ -79,7 +79,7 @@ export const AppProvider = ({ children }) => {
             products, setProducts, fetchProducts,
             categories, setCategories, fetchCategories, 
             users, setUsers, fetchUsers,
-            vouchers, setVouchers, fetchVoucers,
+            vouchers, setVouchers, fetchVouchers,
             orders, setOrders, fetchOrders
             
         }}>

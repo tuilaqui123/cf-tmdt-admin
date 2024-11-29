@@ -2,12 +2,63 @@
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import DatePicker from "@/components/FormElements/DatePicker/DatePicker";
-import { useState } from "react";
-
+import { useState, useContext } from "react";
+import { toast } from "react-toastify";
+import router from "next/router";
+import { Contexts } from "@/app/Contexts";
 const AddCategory = () => {
+
+  const {fetchCategories}:any = useContext(Contexts)
   const [categoryName, setCategoryName] = useState("");
 
- 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (!categoryName) {
+    
+      toast.warning("Vui lòng tên cho thể loại", {
+        position: "top-right",
+        autoClose: 1500
+      })
+      return;
+    }
+
+    fetch("http://localhost:8081/v1/api/user/categories", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: categoryName
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+
+          console.log(data);
+          if (data.name)
+          {
+            toast.success("Thêm Category thành công", {
+              position: "top-right",
+              autoClose: 2000,
+              onClose: ()=>{
+                fetchCategories()
+                router.push("/product/category"); 
+              }
+            });
+          }
+
+          
+  })
+      .catch((err) => {
+        console.error(err);
+        toast.error("Tạo Category thất bại", {
+          position: "top-right",
+          autoClose: 2000,
+        });
+      });
+
+      
+  };
 
   return (
     <DefaultLayout>
@@ -29,13 +80,15 @@ const AddCategory = () => {
                 <input
                   type="text"
                   value={categoryName}
-                  
+                  onChange={(e) => setCategoryName(e.target.value)}
                   placeholder="Enter category name"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                 />
               </div>
 
-              <button className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">
+              <button
+              onClick={handleSubmit}
+               className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">
                 Add
               </button>
             </div>

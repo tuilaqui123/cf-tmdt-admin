@@ -2,6 +2,7 @@
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import SelectCategoryOption from "@/components/SelectGroup/SelectOption";
+import ProductStatusOption from "@/components/SelectGroup/ProductStockOption";
 import { useState, useRef, useContext, useEffect } from "react";
 import { Contexts } from "@/app/Contexts";
 import Image from "next/image";
@@ -13,17 +14,37 @@ interface PriceItem {
   price: number;
 }
 
-const AddProduct = () => {
-
+const EditProduct = ({ params }: { params: { id: string } }) => {
+    const { id } = params;
   const [productName, setProductName] = useState("");
   const [categoryName, setCategoryName] = useState("");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [image, setImage] = useState<File | null>(null);
+  const [image, setImage] = useState<File | null| string>(null);
   const [type, setType] = useState<PriceItem[]>([]);
   const [des, setDes] = useState("");
+  const [isStock, setIsStock] = useState("");
   const [discount, setDiscount] = useState(0);
   const {fetchProducts}:any = useContext(Contexts)
   const router = useRouter();
+  
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8081/v1/api/user/products/` + id)
+      .then((res) => {
+        setProductName(res.data.name);
+        setCategoryName(res.data.categoryId._id);
+        setImagePreview(res.data.image);
+        setImage(res.data.image);
+        setType(res.data.type);
+        setDes(res.data.description);
+        setDiscount(res.data.discount);
+        setIsStock(res.data.isStock);
+
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [id]);
 
   const handlePriceChange = (size: string, event: any) => {
     const newPrice = event.target.value;
@@ -54,6 +75,10 @@ const AddProduct = () => {
 
   const handleCategoryChange = (selectedType: string) => {
     setCategoryName(selectedType);
+    console.log("Type đã chọn:", selectedType); // Xử lý giá trị tại đây
+  };
+  const handleStatusChange = (selectedType: string) => {
+    setIsStock(selectedType);
     console.log("Type đã chọn:", selectedType); // Xử lý giá trị tại đây
   };
 
@@ -112,39 +137,55 @@ const AddProduct = () => {
       })
       return;
     }
+    if (!isStock) {
+      
+      toast.warning("Yêu cầu cập nhật lại status cho sản phẩm", {
+        position: "top-right",
+        autoClose: 1500
+      })
+      return;
+    }
   
     form.append("name", productName);
     form.append("type", JSON.stringify(type));
     form.append("description", des);
     form.append("categoryId", categoryName);
     form.append("discount", discount.toString());
+    form.append("isStock", isStock);
     if (image) {
       form.append("image", image);
     }
   
     axios
-      .post("http://localhost:8081/v1/api/user/products", form, {
+      .put(`http://localhost:8081/v1/api/user/products/` + id, form, {
         headers: { "Content-Type": "multipart/form-data" },
       })
       .then((res) => {
-        
+        if (res.data.success == false)
+        {
+          toast.error("Không thành công", {
+            position: "top-right",
+            autoClose: 1500
+          })
+          return;
+        }
         console.log('Response:', res.data);
       })
       .catch((err) => {
-        toast.error("Không thành công", {
-          position: "top-right",
-          autoClose: 1500
-        })
+        
         console.log("Error:", err.response ? err.response.data : err.message);
       })
       .finally(() => {
         
         fetchProducts();
-        toast.success("Thêm sản phẩm thành công", {
+        toast.success("Sửa sản phẩm thành công", {
           position: "top-right",
-          autoClose: 2000
+          autoClose: 2000,
+          onClose: () =>{
+            router.push("/product/overview")
+          }
         })
-        router.push("/product/overview")
+        
         
       });
   };
@@ -157,7 +198,7 @@ const AddProduct = () => {
         items={[
           { name: "Dashboard", href: "/" },
           { name: "Product Overview", href: "/product/overview" },
-          { name: "Add Product" },
+          { name: "Edit Product" },
         ]}
       />
       <div className="flex flex-col gap-10">
@@ -239,6 +280,7 @@ const AddProduct = () => {
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                 />
               </div>
+              <ProductStatusOption value={isStock}  onStatusChange={handleStatusChange}/>
               <div className="mb-4.5">
                 <label className="mb-3 block text-sm font-medium text-black dark:text-white">
                   Attach Product Image
@@ -269,7 +311,7 @@ const AddProduct = () => {
               onClick={handleSubmit}
               
               className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">
-                Add
+                Edit Product
               </button>
             </div>
           </form>
@@ -279,4 +321,4 @@ const AddProduct = () => {
   );
 };
 
-export default AddProduct;
+export default EditProduct;
