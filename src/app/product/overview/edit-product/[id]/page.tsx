@@ -56,7 +56,7 @@ const EditProduct = ({ params }: { params: { id: string } }) => {
     );
     
   };
-  console.log(type);
+  // console.log(type);
 
   const addSize = (size: string) => {
     setType((prevTypes) => {
@@ -75,11 +75,11 @@ const EditProduct = ({ params }: { params: { id: string } }) => {
 
   const handleCategoryChange = (selectedType: string) => {
     setCategoryName(selectedType);
-    console.log("Type đã chọn:", selectedType); // Xử lý giá trị tại đây
+    // console.log("Type đã chọn:", selectedType); // Xử lý giá trị tại đây
   };
   const handleStatusChange = (selectedType: string) => {
     setIsStock(selectedType);
-    console.log("Type đã chọn:", selectedType); // Xử lý giá trị tại đây
+    // console.log("Type đã chọn:", selectedType); // Xử lý giá trị tại đây
   };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -93,8 +93,8 @@ const EditProduct = ({ params }: { params: { id: string } }) => {
     }
   };
 
-  console.log(categoryName);
-  console.log(des);
+  // console.log(categoryName);
+  // console.log(des);
   const handleSubmit = (event) => {
     event.preventDefault();
     const form = new FormData();
@@ -169,25 +169,27 @@ const EditProduct = ({ params }: { params: { id: string } }) => {
           })
           return;
         }
+        toast.success("Sửa sản phẩm thành công", {
+          position: "top-right",
+          autoClose: 2000,
+          onClose: () =>{
+            fetchProducts()
+            router.push("/product/overview")
+          }
+
+        })
         console.log('Response:', res.data);
       })
       .catch((err) => {
         
         console.log("Error:", err.response ? err.response.data : err.message);
       })
-      .finally(() => {
+      // .finally(() => {
         
-        fetchProducts();
-        toast.success("Sửa sản phẩm thành công", {
-          position: "top-right",
-          autoClose: 2000,
-          onClose: () =>{
-            router.push("/product/overview")
-          }
-        })
+
         
         
-      });
+      // });
   };
   
  
