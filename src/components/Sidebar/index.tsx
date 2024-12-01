@@ -51,8 +51,7 @@ const menuGroups = [
         label: "Dashboard",
         route: "#",
         children: [
-          { label: "Revenue", route: "/revenue" }, 
-          { label: "Category Analystics", route: "/category-analytics"},
+          { label: "Overview", route: "/overview" }, 
           { label: "Top Selling", route: "/top-selling" }
 
          ],

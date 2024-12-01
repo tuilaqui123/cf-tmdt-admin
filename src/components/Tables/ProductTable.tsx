@@ -8,7 +8,6 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import Link from "next/link";
 const ProductTable = () => {
-  
   const { products, fetchProducts }: any = useContext(Contexts);
   // fetchProducts();
   console.log(products);
@@ -33,22 +32,22 @@ const ProductTable = () => {
         if (response.data.success == true) {
           toast.success("Xóa sản phẩm thành công", {
             position: "top-right",
-            autoClose: 2000
-          })
+            autoClose: 2000,
+          });
           fetchProducts();
         } else {
           toast.error("Xóa sản phẩm thất bại", {
             position: "top-right",
-            autoClose: 2000
-          })
+            autoClose: 2000,
+          });
         }
       })
       .catch((error) => {
         console.error("Error deleting product:", error);
         toast.error("Đã xảy ra lỗi khi xóa sản phẩm", {
           position: "top-right",
-          autoClose: 2000
-        })
+          autoClose: 2000,
+        });
       });
   };
 
@@ -79,11 +78,14 @@ const ProductTable = () => {
 
   const getPaginatedData = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
-    const sortedOrders = [...searchProducts].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    
-      
+    const sortedOrders = [...searchProducts].sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+    );
+
     return sortedOrders.slice(startIndex, startIndex + itemsPerPage);
   };
+
+
   return (
     <div className="mb-5 rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
       <div className=" inset-0 flex justify-start">
@@ -128,10 +130,11 @@ const ProductTable = () => {
 
       {getPaginatedData().map((product: any, key) => (
         <div
-        className={key % 2 != 0 
-          ? "bg-gray-100 dark:bg-gray-800 grid grid-cols-9  px-4 py-4.5 md:px-6 2xl:px-7.5" 
-          : "grid grid-cols-9 px-4 py-4.5 dark:border-strokedark md:px-6 2xl:px-7.5"}
-          
+          className={
+            key % 2 != 0
+              ? "grid grid-cols-9 bg-gray-100 px-4  py-4.5 dark:bg-gray-800 md:px-6 2xl:px-7.5"
+              : "grid grid-cols-9 px-4 py-4.5 dark:border-strokedark md:px-6 2xl:px-7.5"
+          }
           key={product._id}
         >
           <div className="col-span-3 flex items-center">
@@ -150,37 +153,44 @@ const ProductTable = () => {
             </div>
           </div>
           <div className="col-span-1 hidden items-center sm:flex">
-          {product.isStock?
-          (<p className="capitalize text-sm text-green-600 dark:text-white">
-              Available
-              </p>)
-              :(
-                <p className="capitalize text-sm text-danger dark:text-white">
-              Sold Out
+            {product.isStock ? (
+              <p className="text-sm capitalize text-green-600 dark:text-white">
+                Available
               </p>
-              )}
-            
+            ) : (
+              <p className="text-sm capitalize text-danger dark:text-white">
+                Sold Out
+              </p>
+            )}
           </div>
           <div className="col-span-1 hidden items-center sm:flex">
-            <p className="capitalize text-sm text-black dark:text-white">
+            <p className="text-sm capitalize text-black dark:text-white">
               {product.categoryId.name}
             </p>
           </div>
 
           <div className="col-span-2 flex flex-col items-center gap-2">
-            {product.type.map((item:any, index) => (
-              <div key={index} className="flex w-1/2 flex-row justify-between">
-                <p className="text-sm text-black dark:text-white">
-                  size {item.size}:
-                </p>
-                <p className="text-sm text-black dark:text-white">
-                  {item.price} VNĐ
-                </p>
-              </div>
-            ))}
+            {product.type
+              .sort((a, b) => {
+                const sizeOrder = { S: 1, M: 2, L: 3 };
+                return sizeOrder[a.size] - sizeOrder[b.size];
+              })
+              .map((item: any, index) => (
+                <div
+                  key={index}
+                  className="flex w-1/2 flex-row justify-between"
+                >
+                  <p className="text-sm text-black dark:text-white">
+                    size {item.size}:
+                  </p>
+                  <p className="text-sm text-black dark:text-white">
+                    {item.price} VNĐ
+                  </p>
+                </div>
+              ))}
           </div>
 
-          <div className="col-span-1 hidden items-center sm:flex justify-center">
+          <div className="col-span-1 hidden items-center justify-center sm:flex">
             <p className="text-sm text-black dark:text-white">
               {product.discount}
             </p>
@@ -188,18 +198,24 @@ const ProductTable = () => {
 
           <div className="col-span-1 flex items-center justify-center">
             <div className="flex items-center space-x-3.5">
-            <Link 
-                    href={`/product/overview/edit-product/${product._id}`}
-                    className="hover:text-primary">
-                      <ModeEditIcon/>
-                    </Link>
-              <button 
-             onClick={() => {
-              if (window.confirm("Bạn có chắc chắn muốn xóa sản phẩm này không?")) {
-                handleDeleteProduct(product._id);
-              }
-            }}
-              className="hover:text-red-500">
+              <Link
+                href={`/product/overview/edit-product/${product._id}`}
+                className="hover:text-primary"
+              >
+                <ModeEditIcon />
+              </Link>
+              <button
+                onClick={() => {
+                  if (
+                    window.confirm(
+                      "Bạn có chắc chắn muốn xóa sản phẩm này không?",
+                    )
+                  ) {
+                    handleDeleteProduct(product._id);
+                  }
+                }}
+                className="hover:text-red-500"
+              >
                 <svg
                   className="fill-current"
                   width="18"

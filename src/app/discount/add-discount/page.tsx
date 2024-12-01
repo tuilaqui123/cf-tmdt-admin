@@ -88,7 +88,7 @@ const router = useRouter();
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        name: discountCode,
+        name: discountCode.toUpperCase(),
         startDay: convertDateFormat(startDate),
         endDay: convertDateFormat(expiredtDate),
         type: type.toLowerCase(),
