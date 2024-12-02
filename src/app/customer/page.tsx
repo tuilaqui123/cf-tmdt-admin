@@ -90,10 +90,10 @@ const CustomerTable = () => {
         <div className="col-span-2 hidden items-center sm:flex">
           <p className="font-bold">Email</p>
         </div>
-        <div className="col-span-2 flex items-center">
+        <div className="col-span-3 flex items-center">
           <p className="font-bold">Address</p>
         </div>
-        <div className="col-span-2 flex items-center">
+        <div className="col-span-1 flex items-center">
           <p className="font-bold">Phone Number</p>
         </div>
       </div>
@@ -113,7 +113,7 @@ const CustomerTable = () => {
                   width: "50",
                   height: "50",
                 }}
-                src={"/images/user/siu.png"}
+                src={"/images/user/customer.png"}
                   
                   alt="Product"
                 />
@@ -128,12 +128,12 @@ const CustomerTable = () => {
           {user.email}
             </p>
           </div>
-          <div className="col-span-2 flex items-center">
+          <div className="col-span-3 flex items-center">
             <p className="text-sm text-black dark:text-white break-words w-11/12">
               {user.address}
             </p>
           </div>
-          <div className="col-span-2 flex items-center">
+          <div className="col-span-1 flex items-center">
           <p className="text-sm text-black dark:text-white break-words w-11/12">
           {user.phone}
             </p>

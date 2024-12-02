@@ -6,6 +6,7 @@ import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Contexts } from "@/app/Contexts";
+import Link from "next/link";
 
 
 const ProductCategoryTable = () => {
@@ -107,9 +108,12 @@ const ProductCategoryTable = () => {
                 </td>
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                   <div className="flex items-center space-x-3.5">
-                    <button className="hover:text-primary">
+                    <Link 
+                    href={`/product/category/edit-category/${category._id}`}
+                    className="hover:text-primary">
+
                      <ModeEditIcon/>
-                    </button>
+                    </Link>
                     <button 
                     onClick={() => {
                       if (window.confirm("Bạn có chắc chắn muốn xóa category này không?")) {

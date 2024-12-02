@@ -12,6 +12,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import PersonIcon from "@mui/icons-material/Person";
 import OverviewRevenue from "./OverviewRevenue";
+import OrdersCard from "./OrdersCard";
 
 const Overview = () => {
   const { orders } = useContext(Contexts);
@@ -51,34 +52,66 @@ const Overview = () => {
   }));
   console.log(revenueChartData)
 
+  // Hàm kiểm tra ngày giống nhau
+const isSameDay = (date1: Date, date2: Date) => {
+  return (
+    date1.getDate() === date2.getDate() &&
+    date1.getMonth() === date2.getMonth() &&
+    date1.getFullYear() === date2.getFullYear()
+  );
+};
+
+// Lấy ngày hôm nay và hôm qua
+const today = new Date();
+const yesterday = new Date();
+yesterday.setDate(today.getDate() - 1);
+
+// Tổng số đơn hàng hôm nay
+const todayOrders = orders.filter((order) =>
+  isSameDay(new Date(order.createdAt), today)
+).length;
+
+// Tổng số đơn hàng hôm qua
+const yesterdayOrders = orders.filter((order) =>
+  isSameDay(new Date(order.createdAt), yesterday)
+).length;
+
   return (
     <DefaultLayout>
       <Breadcrumb pageName="Overview" />
 
-      <div className="bg-gray-100 min-h-screen p-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-          <OverviewCard
-            title="Tổng đơn hàng"
-            value={totalOrders}
-            icon={<ShoppingCartIcon className="text-blue-500" />}
-          />
-          <OverviewRevenue
-            title="Doanh thu"
-            value={`${totalRevenue.toLocaleString()} VND`}
-            icon={<AttachMoneyIcon className="text-green-500 " />}
-            orders={orders}  // Truyền orders vào OverviewCard
-          />
-          <OverviewCard
-            title="Khách hàng"
-            value={new Set(orders.map((order) => order.user)).size}
-            icon={<PersonIcon className="text-purple-500" />}
-          />
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <StatusChart data={statusData} />  {/* Truyền data với label vào StatusChart */}
-          <RevenueChart data={revenueChartData} /> {/* Dữ liệu doanh thu theo thời gian đã nhóm */}
-        </div>
-      </div>
+      <div className="bg-gray-100 min-h-screen p-8 dark:bg-gray-900">
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+  <OrdersCard
+  title="Total Orders Today"
+  current={todayOrders}
+  previous={yesterdayOrders}
+  icon={<ShoppingCartIcon className="text-blue-500" />}
+/>
+    <OverviewRevenue
+      title="Revenue"
+      value={`${totalRevenue.toLocaleString()} VND`}
+      icon={<AttachMoneyIcon className="text-green-500" />}
+      orders={orders}  // Truyền orders vào OverviewCard
+    />
+    <OverviewCard
+      title="Customers"
+      value={new Set(orders.map((order) => order.user)).size}
+      icon={<PersonIcon className="text-purple-500" />}
+    />
+  </div>
+
+  <div className="flex flex-col md:flex-row gap-4">
+    <div className="basis-2/5">
+      <StatusChart data={statusData} /> 
+    </div>
+
+    <div className="basis-3/5">
+      <RevenueChart data={revenueChartData} /> {/* Dữ liệu doanh thu theo thời gian đã nhóm */}
+    </div>
+  </div>
+</div>
+
     </DefaultLayout>
   );
 };

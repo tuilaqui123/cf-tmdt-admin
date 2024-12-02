@@ -22,7 +22,7 @@ const ProductTracking = () => {
       });
       return acc;
     },
-    {} as Record<string, { product: any; sales: number }>,
+    {} as Record<string, { product: any; sales: number }>
   );
 
   const productSalesToday = orders.reduce(
@@ -36,22 +36,31 @@ const ProductTracking = () => {
           if (product) {
             const productId = product._id;
             if (!acc[productId]) acc[productId] = { product, sales: 0 };
-            acc[productId].sales += item.quantity; // Chỉ cộng số lượng
+            acc[productId].sales += item.quantity;
           }
         });
       }
       return acc;
     },
-    {} as Record<string, { product: any; sales: number }>,
+    {} as Record<string, { product: any; sales: number }>
+  );
+
+  const allProductSalesToday = Object.values(productSalesToday);
+
+  // Tìm số lượng bán cao nhất trong ngày hôm nay
+  const maxSalesToday =
+    allProductSalesToday.length > 0
+      ? Math.max(...allProductSalesToday.map((item) => item.sales))
+      : 0;
+
+  // Lọc các sản phẩm có số lượng bán bằng `maxSalesToday`
+  const topSellingProductsToday = allProductSalesToday.filter(
+    (item) => item.sales === maxSalesToday
   );
 
   const topSellingProducts = Object.values(productSales)
     .sort((a, b) => b.sales - a.sales)
-    .slice(0, 5);
-    const topSellingProductsToday = Object.values(productSalesToday)
-    .sort((a, b) => b.sales - a.sales)
-    .slice(0, 5);
-
+    .slice(0, 6);
 
   const topSellingProducts10 = Object.values(productSales)
     .sort((a, b) => b.sales - a.sales)
@@ -60,20 +69,15 @@ const ProductTracking = () => {
   const topDiscountedProducts = products
     .filter((product) => product !== null)
     .sort((a, b) => b.discount - a.discount)
-    .slice(0, 5);
-
-  const unsoldProducts = products.filter(
-    (product) => product !== null && !productSales[product._id],
-  );
-
+    .slice(0, 6);
 
   return (
     <DefaultLayout>
       <Breadcrumb pageName="Product Tracking" />
-      <div className="min-h-screen bg-gray-100 p-8">
-      <div className="w-full">
-          <h2 className="mb-4 text-lg font-semibold text-gray-700">
-            Top 5 Sản phẩm bán chạy hôm nay
+      <div className="min-h-screen bg-gray-100 p-8 dark:bg-gray-900">
+        <div className="w-full">
+          <h2 className="mb-4 text-lg font-semibold text-gray-700 dark:text-gray-200">
+            Best-Selling Products Today
           </h2>
         </div>
         <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-3">
@@ -82,12 +86,14 @@ const ProductTracking = () => {
               key={item.product._id}
               item={item.product}
               sales={item.sales}
+              isTopSelling={true}
             />
           ))}
         </div>
-        <div className="w-full ">
-          <h2 className="mb-4 text-lg font-semibold text-gray-700">
-            Top 5 Sản phẩm bán chạy nhất
+
+        <div className="w-full">
+          <h2 className="mb-4 text-lg font-semibold text-gray-700 dark:text-gray-200">
+            Best-Selling Products
           </h2>
         </div>
         <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-3">
@@ -100,9 +106,9 @@ const ProductTracking = () => {
           ))}
         </div>
 
-        <div className="w-full ">
-          <h2 className="mb-4 text-lg font-semibold text-gray-700">
-            Top 5 giảm giá nhiều nhất
+        <div className="w-full">
+          <h2 className="mb-4 text-lg font-semibold text-gray-700 dark:text-gray-200">
+            Most Discounted Products
           </h2>
         </div>
         <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-3">

@@ -15,7 +15,7 @@ const TablesPage = () => {
     <DefaultLayout>
       <Breadcrumb pageName="Order Management" />
 
-      <div className="flex items-center gap-5 justify-evenly rounded-md p-2 mb-4 dark:bg-meta-4">
+      <div className="flex items-center justify-end gap-5 rounded-md p-2 mb-4 dark:bg-meta-4">
         <button
           onClick={() => toggleStatus("pending")}
           className=" rounded px-3  py-1 font-medium text-warning  shadow-card 

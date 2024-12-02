@@ -68,8 +68,8 @@ const OverviewRevenue: React.FC<OverviewCardProps> = ({ title, value, icon, orde
   const totalRevenue = calculateRevenue(); // Lấy tổng doanh thu theo lựa chọn
 
   // Lấy danh sách các năm và tháng trong dữ liệu
-  const years = Array.from(new Set(orders.map((order) => new Date(order.createdAt).getFullYear()))).sort();
-  const months = Array.from(new Set(orders.map((order) => new Date(order.createdAt).getMonth()))).sort();
+  const years = Array.from(new Set(orders.map((order) => new Date(order.createdAt).getFullYear())));
+  const months = Array.from(new Set(orders.map((order) => new Date(order.createdAt).getMonth())));
 
   // Lấy danh sách các ngày trong tháng được chọn mà có doanh thu
   const getDaysWithRevenue = (month: number, year: number) => {
@@ -135,8 +135,8 @@ const OverviewRevenue: React.FC<OverviewCardProps> = ({ title, value, icon, orde
   const previousDateRevenue = selectedDate !== 'all' ? getRevenueForPreviousDay(orders, new Date(selectedDate)) : 0;
 
     
-  // Lọc ra các ngày có doanh thu trong tháng đã chọn
   const daysWithRevenue = selectedMonth !== 'all' ? getDaysWithRevenue(parseInt(selectedMonth), parseInt(selectedYear)) : [];
+
 
   const getPercentageChange = (currentRevenue: number, previousRevenue: number) => {
     if (previousRevenue === 0) return currentRevenue > 0 ? 100 : 0; // Tránh chia cho 0
@@ -144,95 +144,99 @@ const OverviewRevenue: React.FC<OverviewCardProps> = ({ title, value, icon, orde
   };
 
   return (
-    <div className="bg-white shadow rounded-lg p-4 flex items-center justify-between">
-      {/* Nội dung (tiêu đề và giá trị) bên trái */}
-      <div className="flex items-center basis-1/2 ">
-        {/* Biểu tượng bên trái */}
-        <div className="text-blue-500 p-3 rounded-lg bg-blue-100">{icon}</div>
+    <div className="bg-white shadow rounded-lg p-4 flex items-center justify-between dark:bg-gray-800">
+  {/* Nội dung (tiêu đề và giá trị) bên trái */}
+  <div className="flex items-center basis-1/2">
+    {/* Biểu tượng bên trái */}
+    <div className="text-blue-500 p-3 rounded-lg bg-blue-100 dark:bg-blue-900">{icon}</div>
 
-        {/* Tiêu đề và giá trị */}
-        <div className="ml-4 flex-1 flex-row">
-            <div>
-
-          <h3 className="text-sm font-medium text-gray-500">{title}</h3>
-          <p className="text-lg font-semibold text-gray-800 break-words">{`${totalRevenue.toLocaleString()} VND`}</p>
-          </div>
-          <div>
-          {selectedYear !== 'all' && selectedMonth === 'all' && selectedDate === 'all' ? (
-              <div className="ml-2 flex items-center">
-                {getGrowthIcon(totalRevenue, previousYearRevenue)}
-                <span className="ml-1 text-sm text-gray-500">
-                  {` ${getPercentageChange(totalRevenue, previousYearRevenue).toFixed(2)}%`}
-                </span>
-              </div>
-            ) : selectedYear !== 'all' && selectedMonth !== 'all' && selectedDate === 'all' ? (
-              <div className="ml-2 flex items-center">
-                {getGrowthIcon(totalRevenue, previousMonthRevenue)}
-                <span className="ml-1 text-sm text-gray-500">
-                  {` ${getPercentageChange(totalRevenue, previousMonthRevenue).toFixed(2)}%`}
-                </span>
-              </div>
-            ) : selectedYear !== 'all' && selectedMonth !== 'all' && selectedDate !== 'all' ? (
-              <div className="ml-2 flex items-center">
-                {getGrowthIcon(totalRevenue, previousDateRevenue)}
-                <span className="ml-1 text-sm text-gray-500">
-                  {` ${getPercentageChange(totalRevenue, previousDateRevenue).toFixed(2)}%`}
-                </span>
-              </div>
-            ) : (
-              <div></div>
-            )}
-          </div>
-        </div>
+    {/* Tiêu đề và giá trị */}
+    <div className="ml-4 flex-1 flex-row">
+      <div>
+        <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">{title}</h3>
+        <p className="text-lg font-semibold text-gray-800 dark:text-gray-200 break-words">
+          {`${totalRevenue.toLocaleString()} VND`}
+        </p>
       </div>
-
-      {/* Dropdown để chọn khoảng thời gian lọc (ở bên phải) */}
-      <div className="flex flex-col space-y-4 basis-1/3">
-        {/* Chọn Năm */}
-        <select
-          value={selectedYear}
-          onChange={handleYearChange}
-          className="p-2 bg-gray-100 border border-gray-300 rounded w-full max-w-xs"
-        >
-          <option value="all">All Time</option>
-          {years.map((year) => (
-            <option key={year} value={year}>{year}</option>
-          ))}
-        </select>
-
-        {/* Chọn Tháng */}
-        <select
-          value={selectedMonth}
-          onChange={handleMonthChange}
-          className="p-2 bg-gray-100 border border-gray-300 rounded w-full max-w-xs"
-        >
-          <option value="all">All Month</option>
-          {months.map((month) => (
-            <option key={month} value={month}>
-              {new Date(2024, month).toLocaleString('default', { month: 'long' })}
-            </option>
-          ))}
-        </select>
-
-        {/* Chọn Ngày */}
-        <select
-          value={selectedDate}
-          onChange={handleDateChange}
-          className="p-2 bg-gray-100 border border-gray-300 rounded w-full max-w-xs"
-        >
-          <option value="all">All Day</option>
-          {selectedMonth !== 'all' && daysWithRevenue.length > 0 ? (
-            daysWithRevenue.map((date, index) => (
-              <option key={index} value={date}>
-                {date}
-              </option>
-            ))
-          ) : (
-            <option value="all">Choose month to select date</option>
-          )}
-        </select>
+      <div>
+        {selectedYear !== "all" && selectedMonth === "all" && selectedDate === "all" ? (
+          <div className=" flex items-center">
+            {getGrowthIcon(totalRevenue, previousYearRevenue)}
+            <span className="ml-1 text-sm text-gray-500 dark:text-gray-400">
+              {` ${getPercentageChange(totalRevenue, previousYearRevenue).toFixed(2)}%`}
+            </span>
+          </div>
+        ) : selectedYear !== "all" && selectedMonth !== "all" && selectedDate === "all" ? (
+          <div className=" flex items-center">
+            {getGrowthIcon(totalRevenue, previousMonthRevenue)}
+            <span className="ml-1 text-sm text-gray-500 dark:text-gray-400">
+              {` ${getPercentageChange(totalRevenue, previousMonthRevenue).toFixed(2)}%`}
+            </span>
+          </div>
+        ) : selectedYear !== "all" && selectedMonth !== "all" && selectedDate !== "all" ? (
+          <div className=" flex items-center">
+            {getGrowthIcon(totalRevenue, previousDateRevenue)}
+            <span className="ml-1 text-sm text-gray-500 dark:text-gray-400">
+              {` ${getPercentageChange(totalRevenue, previousDateRevenue).toFixed(2)}%`}
+            </span>
+          </div>
+        ) : (
+          <div></div>
+        )}
       </div>
     </div>
+  </div>
+
+  {/* Dropdown để chọn khoảng thời gian lọc (ở bên phải) */}
+  <div className="flex flex-col space-y-4 basis-1/3">
+    {/* Chọn Năm */}
+    <select
+      value={selectedYear}
+      onChange={handleYearChange}
+      className="p-2 bg-gray-100 border border-gray-300 rounded w-full max-w-xs dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300"
+    >
+      <option value="all">All Time</option>
+      {years.map((year) => (
+        <option key={year} value={year}>
+          {year}
+        </option>
+      ))}
+    </select>
+
+    {/* Chọn Tháng */}
+    <select
+      value={selectedMonth}
+      onChange={handleMonthChange}
+      className="p-2 bg-gray-100 border border-gray-300 rounded w-full max-w-xs dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300"
+    >
+      <option value="all">All Month</option>
+      {months.map((month) => (
+        <option key={month} value={month}>
+          {new Date(2024, month).toLocaleString("default", { month: "long" })}
+        </option>
+      ))}
+    </select>
+
+    {/* Chọn Ngày */}
+    <select
+      value={selectedDate}
+      onChange={handleDateChange}
+      className="p-2 bg-gray-100 border border-gray-300 rounded w-full max-w-xs dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300"
+    >
+      <option value="all">All Day</option>
+      {selectedMonth !== "all" && daysWithRevenue.length > 0 ? (
+        daysWithRevenue.map((date, index) => (
+          <option key={index} value={date}>
+            {date}
+          </option>
+        ))
+      ) : (
+        <option value="all">Choose month to select date</option>
+      )}
+    </select>
+  </div>
+</div>
+
   );
 };
 

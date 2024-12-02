@@ -54,7 +54,7 @@ const EditDiscount = ({ params }: { params: { id: string } }) => {
     event.preventDefault();
     if (!discountCode) {
     
-      toast.warning("Vui lòng nhập code cho discount", {
+      toast.warning("Please enter code name", {
         position: "top-right",
         autoClose: 1500
       })
@@ -62,7 +62,7 @@ const EditDiscount = ({ params }: { params: { id: string } }) => {
     }
     if (!startDate) {
       
-      toast.warning("Vui lòng chọn ngày bắt đầu cho discount", {
+      toast.warning("Please enter discount start day", {
         position: "top-right",
         autoClose: 1500
       })
@@ -70,7 +70,7 @@ const EditDiscount = ({ params }: { params: { id: string } }) => {
     }
     if (!expiredtDate) {
       
-      toast.warning("Vui lòng nhập ngày kết thúc cho discount", {
+      toast.warning("Please enter discount expired day", {
         position: "top-right",
         autoClose: 1500
       })
@@ -79,14 +79,14 @@ const EditDiscount = ({ params }: { params: { id: string } }) => {
     const currentDate = new Date();
     if (convertToDate(expiredtDate) < currentDate || convertToDate(expiredtDate) < convertToDate(startDate) ) {
       
-      toast.warning("Vui lòng nhập ngày hết hạn không nhỏ hơn hạn ngày hiện tại hoặc ngày bắt đầu", {
+      toast.warning("Please enter expired day which is not smaller than start day", {
         position: "top-right",
         autoClose: 1500
       })
       return;
     }
     if (!type) {
-      toast.warning("Vui lòng chọn loại discount", {
+      toast.warning("Please choose discount type", {
         position: "top-right",
         autoClose: 1500
       })
@@ -94,14 +94,14 @@ const EditDiscount = ({ params }: { params: { id: string } }) => {
     }
     if (!discountValue) {
       
-      toast.warning("Vui lòng nhập giá trị discount", {
+      toast.warning("Please enter discount value", {
         position: "top-right",
         autoClose: 1500
       })
       return;
     }
     if (type=="Trade" && discountValue > 100) {
-      toast.warning("Vui lòng nhập giá trị discount bé hơn 100(%)", {
+      toast.warning("Please enter discount value smaller than 100(%)", {
         position: "top-right",
         autoClose: 1500
       })
@@ -125,7 +125,7 @@ const EditDiscount = ({ params }: { params: { id: string } }) => {
 
           console.log(data);
           fetchVouchers()
-          toast.success("Sửa voucher thành công", {
+          toast.success("Edit Voucher successfully", {
             position: "top-right",
             autoClose: 2000,  // Đảm bảo toast tự động đóng sau 2 giây
             onClose: () => {
@@ -135,7 +135,7 @@ const EditDiscount = ({ params }: { params: { id: string } }) => {
   })
       .catch((err) => {
         console.error(err);
-        toast.error("Sửa voucher thất bại", {
+        toast.error("Edit Voucher failed", {
           position: "top-right",
           autoClose: 2000,
         });

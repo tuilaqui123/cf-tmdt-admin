@@ -387,11 +387,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       >
         {/* <!-- SIDEBAR HEADER --> */}
         <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
-          <Link href="/">
+          <Link className='w-full flex justify-center' href="/">
             <Image
               width={200}
               height={100}
-              src={"/images/logo/cfLogo.png"}
+              src={"/images/logo/nobg.png"}
               alt="Logo"
               priority
             />

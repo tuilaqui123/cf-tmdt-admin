@@ -76,7 +76,7 @@ const AddProduct = () => {
   
     // Kiểm tra các giá trị
     if (!productName) {
-      toast.warning("Yêu cầu nhập tên sản phẩm", {
+      toast.warning("Please enter product name", {
         position: "top-right",
         autoClose: 1500
       })
@@ -84,21 +84,28 @@ const AddProduct = () => {
     }
     if (!categoryName) {
     
-      toast.warning("Yêu cầu chọn loại sản phẩm", {
+      toast.warning("Please select category type", {
         position: "top-right",
         autoClose: 1500
       })
       return;
     }
     if (!des) {
-      toast.warning("Yêu cầu nhập mô tả sản phẩm", {
+      toast.warning("Please enter product description", {
+        position: "top-right",
+        autoClose: 1500
+      })
+      return;
+    }
+    if (discount > 100 || discount < 0) {
+      toast.warning("Please enter discount value from 0 - 100", {
         position: "top-right",
         autoClose: 1500
       })
       return;
     }
     if (!image) {
-      toast.warning("Yêu cầu thêm hình ảnh cho sản phẩm", {
+      toast.warning("Please add image for product", {
         position: "top-right",
         autoClose: 1500
       })
@@ -106,7 +113,7 @@ const AddProduct = () => {
     }
     if (type.length === 0) {
       
-      toast.warning("Yêu cầu các type cho sản phẩm", {
+      toast.warning("Requires types for products", {
         position: "top-right",
         autoClose: 1500
       })
@@ -127,26 +134,33 @@ const AddProduct = () => {
         headers: { "Content-Type": "multipart/form-data" },
       })
       .then((res) => {
+        if (res.data.success == false)
+        {
+          toast.error("Add product fail", {
+            position: "top-right",
+            autoClose: 1500
+          })
+          return;
+        }
+        else{
+          fetchProducts();
+          toast.success("Add product sucessfully", {
+            position: "top-right",
+            autoClose: 2000
+          })
+          router.push("/product/overview")
+        }
         
         console.log('Response:', res.data);
       })
       .catch((err) => {
-        toast.error("Không thành công", {
+        toast.error("Add product fail", {
           position: "top-right",
           autoClose: 1500
         })
         console.log("Error:", err.response ? err.response.data : err.message);
       })
-      .finally(() => {
-        
-        fetchProducts();
-        toast.success("Thêm sản phẩm thành công", {
-          position: "top-right",
-          autoClose: 2000
-        })
-        router.push("/product/overview")
-        
-      });
+      
   };
   
  

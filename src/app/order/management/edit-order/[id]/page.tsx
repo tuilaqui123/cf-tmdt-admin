@@ -120,14 +120,14 @@ const EditOrder = ({ params }: { params: { id: string } }) => {
 
           if (data.success == false)
           {
-            toast.error("Cập nhật trạng thái đơn hàng thất bại, không đúng route đơn hàng", {
+            toast.error("Edit delivery status failed, the route was not right", {
               position: "top-right",
               autoClose: 5000,
             });
           }
           else {
             fetchOrders()
-          toast.success("Cập nhật trạng thái vận chuyển đơn hàng thành công", {
+          toast.success("Edit delivery status sucessfully", {
             position: "top-right",
             autoClose: 2000,  // Đảm bảo toast tự động đóng sau 2 giây
             onClose: () => {
@@ -179,6 +179,7 @@ const EditOrder = ({ params }: { params: { id: string } }) => {
                           className="flex flex-row justify-between border-b-2 py-2"
                           key={item._id}
                         >
+                          <div className="flex flex-col">
                           <div className="flex basis-3/4 flex-row items-center gap-2">
                             {item.product.image && (
                               <Image
@@ -188,7 +189,11 @@ const EditOrder = ({ params }: { params: { id: string } }) => {
                                 height={60}
                               />
                             )}
+                            
                             <p className="text-ellipsis">{item.product.name}</p>
+                            
+                          </div>
+                          <p className="text-ellipsis italic max-w-150">Note: {item.note}</p>
                           </div>
                           <div className="flex flex-col items-start gap-2 text-sm basis-1/6 ">
                             <div className="flex flex-row justify-between w-full">

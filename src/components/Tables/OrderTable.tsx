@@ -122,8 +122,8 @@ const OrderTable = ({ filterStatus, setFilterStatus }) => {
       });
   };
   return (
-    <div className=" relative rounded-sm border border-stroke bg-white px-5 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-      <div className=" inset-0 flex justify-start">
+    <div className=" relative rounded-md overflow-hidden border border-gray-400  bg-white pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark">
+      {/* <div className=" inset-0 flex justify-start">
         <div className=" w-full px-4 py-5 sm:block">
           <form action="#" method="POST">
             <div className="relative">
@@ -140,7 +140,7 @@ const OrderTable = ({ filterStatus, setFilterStatus }) => {
             </div>
           </form>
         </div>
-      </div>
+      </div> */}
       <div className="max-w-full overflow-x-auto">
         <table className="w-full table-auto">
           <thead>
@@ -168,7 +168,7 @@ const OrderTable = ({ filterStatus, setFilterStatus }) => {
           <tbody>
             {getPaginatedData().map((orderItem, key) => (
               <tr
-                className={key % 2 != 0 ? "bg-gray-100 dark:bg-gray-800" : ""}
+                className={key % 2 != 0 ? "bg-gray-50 dark:bg-gray-800" : ""}
                 key={orderItem._id}
               >
                 <td className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-6">

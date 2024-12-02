@@ -2,15 +2,28 @@
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import DatePicker from "@/components/FormElements/DatePicker/DatePicker";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { toast } from "react-toastify";
 import router from "next/router";
 import { Contexts } from "@/app/Contexts";
-const AddCategory = () => {
+import axios from "axios";
+const EditCategory = ({ params }: { params: { id: string } }) => {
+    const { id } = params;
 
   const {fetchCategories}:any = useContext(Contexts)
   const [categoryName, setCategoryName] = useState("");
 
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8081/v1/api/user/categories/` + id)
+      .then((res) => {
+        setCategoryName(res.data.name);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [id]);
+  
   const handleSubmit = (event) => {
     event.preventDefault();
     if (!categoryName) {
@@ -22,46 +35,46 @@ const AddCategory = () => {
       return;
     }
 
-    fetch("http://localhost:8081/v1/api/user/categories", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: categoryName
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
+    fetch(`http://localhost:8081/v1/api/user/categories/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: categoryName,
 
-          console.log(data);
-          if (data.name)
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success == false)
           {
-            toast.success("Add category successfully", {
+            toast.error("Edit category failed", {
               position: "top-right",
               autoClose: 2000,
-              onClose: ()=>{
-                fetchCategories()
-                router.push("/product/category"); 
+            });
+          }
+          else
+          {
+            console.log(data);
+            fetchCategories()
+            toast.success("Edit category successfully", {
+              position: "top-right",
+              autoClose: 2000,  // Đảm bảo toast tự động đóng sau 2 giây
+              onClose: () => {
+                router.push("/product/category"); // Chuyển hướng khi toast đóng
               }
             });
           }
-          else{
-            toast.error("Add category failed", {
-              position: "top-right",
-              autoClose: 2000,
-            });
-          }
 
-          
-  })
-      .catch((err) => {
-        console.error(err);
-        toast.error("Add category failed", {
-          position: "top-right",
-          autoClose: 2000,
+    })
+        .catch((err) => {
+          console.error(err);
+          toast.error("Edit category failed", {
+            position: "top-right",
+            autoClose: 2000,
+          });
         });
-      });
 
       
   };
@@ -72,7 +85,7 @@ const AddCategory = () => {
   items={[
     { name: "Dashboard", href: "/" },
     { name: "Product Category", href: "/product/category" },
-    { name: "Add Category" }
+    { name: "Edit Category" }
   ]}
 />
       <div className="flex flex-col gap-10">
@@ -95,7 +108,7 @@ const AddCategory = () => {
               <button
               onClick={handleSubmit}
                className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">
-                Add
+                Edit
               </button>
             </div>
           </form>
@@ -105,4 +118,4 @@ const AddCategory = () => {
   );
 };
 
-export default AddCategory;
+export default EditCategory;
