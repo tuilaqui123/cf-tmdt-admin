@@ -54,7 +54,7 @@ const EditDiscount = ({ params }: { params: { id: string } }) => {
     event.preventDefault();
     if (!discountCode) {
     
-      toast.warning("Please enter code name", {
+      toast.warning("Yêu cầu nhập code cho phiếu", {
         position: "top-right",
         autoClose: 1500
       })
@@ -62,7 +62,7 @@ const EditDiscount = ({ params }: { params: { id: string } }) => {
     }
     if (!startDate) {
       
-      toast.warning("Please enter discount start day", {
+      toast.warning("Yêu cầu chọn ngày bắt đầu", {
         position: "top-right",
         autoClose: 1500
       })
@@ -70,7 +70,7 @@ const EditDiscount = ({ params }: { params: { id: string } }) => {
     }
     if (!expiredtDate) {
       
-      toast.warning("Please enter discount expired day", {
+      toast.warning("Yêu cầu chọn ngày hết hạn", {
         position: "top-right",
         autoClose: 1500
       })
@@ -79,14 +79,14 @@ const EditDiscount = ({ params }: { params: { id: string } }) => {
     const currentDate = new Date();
     if (convertToDate(expiredtDate) < currentDate || convertToDate(expiredtDate) < convertToDate(startDate) ) {
       
-      toast.warning("Please enter expired day which is not smaller than start day", {
+      toast.warning("Yêu cầu chọn ngày hết hạn lớn hơn ngày bắt đầu và ngày hiện tại", {
         position: "top-right",
         autoClose: 1500
       })
       return;
     }
     if (!type) {
-      toast.warning("Please choose discount type", {
+      toast.warning("Yêu cầu chọn loại phiếu", {
         position: "top-right",
         autoClose: 1500
       })
@@ -94,14 +94,14 @@ const EditDiscount = ({ params }: { params: { id: string } }) => {
     }
     if (!discountValue) {
       
-      toast.warning("Please enter discount value", {
+      toast.warning("Yêu cầu nhập giá trị phiếu", {
         position: "top-right",
         autoClose: 1500
       })
       return;
     }
-    if (type=="Trade" && discountValue > 100) {
-      toast.warning("Please enter discount value smaller than 100(%)", {
+    if (type=="Trade" && (discountValue > 50 || discountValue < 0)) {
+      toast.warning("Yêu cầu nhập giá trị phần trăm trong khoảng 0-50(%)", {
         position: "top-right",
         autoClose: 1500
       })
@@ -125,17 +125,15 @@ const EditDiscount = ({ params }: { params: { id: string } }) => {
 
           console.log(data);
           fetchVouchers()
-          toast.success("Edit Voucher successfully", {
+          toast.success("Sửa phiếu giảm giá thành công", {
             position: "top-right",
-            autoClose: 2000,  // Đảm bảo toast tự động đóng sau 2 giây
-            onClose: () => {
-              router.push("/discount"); // Chuyển hướng khi toast đóng
-            }
+            autoClose: 2000, 
           });
+          router.push("/discount"); 
   })
       .catch((err) => {
         console.error(err);
-        toast.error("Edit Voucher failed", {
+        toast.error("Sửa phiếu giảm giá thất bại", {
           position: "top-right",
           autoClose: 2000,
         });
@@ -177,8 +175,8 @@ const EditDiscount = ({ params }: { params: { id: string } }) => {
       <Breadcrumb
         items={[
           { name: "Dashboard", href: "/" },
-          { name: "Discount", href: "/discount" },
-          { name: "Edit Discount" },
+          { name: "Phiếu giảm giá", href: "/discount" },
+          { name: "Sửa phiếu" },
         ]}
       />
       <div className="flex flex-col gap-10">
@@ -187,7 +185,7 @@ const EditDiscount = ({ params }: { params: { id: string } }) => {
             <div className="p-6.5">
               <div className="mb-4.5">
                 <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                  Discount Code
+                  Mã Code
                 </label>
                 <input
                   type="text"
@@ -199,14 +197,14 @@ const EditDiscount = ({ params }: { params: { id: string } }) => {
               </div>
               <div className="mb-4.5">
                 <DatePicker
-                  title="Select Start Date"
+                  title="Chọn ngày bắt đầu"
                   value={startDate} // Truyền giá trị khởi tạo
                   onDateChange={handleStartDateChange}
                 />
               </div>
               <div className="mb-4.5">
                 <DatePicker
-                  title="Select Expired Date"
+                  title="Chọn ngày hết hạn"
                   value={expiredtDate} // Truyền giá trị khởi tạo
                   onDateChange={handleExpiredDateChange}
                 />
@@ -218,7 +216,7 @@ const EditDiscount = ({ params }: { params: { id: string } }) => {
               {type == "Trade" ? (
                 <div className="mb-4.5">
                   <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                    Discount Value (%)
+                    Giá trị phần trăm (%)
                   </label>
                   <input
                     type="number"
@@ -231,7 +229,7 @@ const EditDiscount = ({ params }: { params: { id: string } }) => {
               ) : type == "Chain" ? (
                 <div className="mb-4.5">
                   <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                    Discount Value (VNĐ)
+                    Giá trị số tiền giảm (VNĐ)
                   </label>
                   <input
                     type="number"
@@ -249,7 +247,7 @@ const EditDiscount = ({ params }: { params: { id: string } }) => {
                 onClick={handleSubmit}
                 className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90"
               >
-                Edit
+                Sửa
               </button>
             </div>
           </form>

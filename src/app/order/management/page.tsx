@@ -13,7 +13,7 @@ const TablesPage = () => {
   };
   return (
     <DefaultLayout>
-      <Breadcrumb pageName="Order Management" />
+      <Breadcrumb pageName="Quản lý đơn hàng" />
 
       <div className="flex items-center justify-end gap-5 rounded-md p-2 mb-4 dark:bg-meta-4">
         <button
@@ -22,7 +22,7 @@ const TablesPage = () => {
         shadow-gray-400 hover:bg-slate-700 hover:text-white hover:shadow-card 
         dark:bg-cyan-950 dark:text-warning dark:hover:bg-[#3d50e0] dark:hover:text-white"
         >
-          Pending
+          Chờ xác nhận
         </button>
         <button
           onClick={() => toggleStatus("confirmed")}
@@ -30,7 +30,7 @@ const TablesPage = () => {
         shadow-gray-400 hover:bg-slate-700 hover:text-white hover:shadow-card 
         dark:bg-cyan-950  dark:hover:bg-[#3d50e0] dark:hover:text-white"
         >
-          Confirmed
+          Đã xác nhận
         </button>
         <button
           onClick={() => toggleStatus("doing")}
@@ -38,7 +38,7 @@ const TablesPage = () => {
         shadow-gray-400 hover:bg-slate-700 hover:text-white hover:shadow-card 
         dark:bg-cyan-950   dark:hover:bg-[#3d50e0] dark:hover:text-white"
         >
-          Doing
+          Đang làm
         </button>
         <button
           onClick={() => toggleStatus("shipping")}
@@ -46,7 +46,7 @@ const TablesPage = () => {
         shadow-gray-400 hover:bg-slate-700 hover:text-white hover:shadow-card 
         dark:bg-cyan-950   dark:hover:bg-[#3d50e0] dark:hover:text-white"
         >
-          Shipping
+          Đang vận chuyển
         </button>
         <button
           onClick={() => toggleStatus("success")}
@@ -54,28 +54,28 @@ const TablesPage = () => {
         shadow-gray-400 hover:bg-slate-700 hover:text-white hover:shadow-card 
         dark:bg-cyan-950 dark:text-success  dark:hover:bg-[#3d50e0] dark:hover:text-white"
         >
-          Success
+          Thành công
         </button>
         <button 
           onClick={() => toggleStatus("fail")}
           className=" text-danger rounded  px-3 py-1 font-medium  shadow-card 
           shadow-gray-400 hover:bg-slate-700 hover:text-white hover:shadow-card 
           dark:bg-cyan-950 dark:text-danger dark:hover:bg-[#3d50e0] dark:hover:text-white">            
-          Fail
+          Thất bại
           </button>
         <button 
           onClick={() => toggleStatus("systemCancel")}
           className=" text-danger rounded  px-3 py-1 font-medium  shadow-card 
           shadow-gray-400 hover:bg-slate-700 hover:text-white hover:shadow-card 
           dark:bg-cyan-950 dark:text-danger dark:hover:bg-[#3d50e0] dark:hover:text-white">            
-          System Cancel
+          Hệ thống hủy
           </button>
           <button 
           onClick={() => toggleStatus("customerCancel")}
           className=" text-danger rounded  px-3 py-1 font-medium  shadow-card 
           shadow-gray-400 hover:bg-slate-700 hover:text-white hover:shadow-card 
           dark:bg-cyan-950 dark:text-danger dark:hover:bg-[#3d50e0] dark:hover:text-white">            
-         Customer Cancel
+         Khách hàng hủy
           </button>
       </div>
       <div className="flex flex-col gap-10">

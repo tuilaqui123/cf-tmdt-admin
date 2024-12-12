@@ -99,7 +99,7 @@ const ProductTable = () => {
                 type="text"
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
-                placeholder="Type to search..."
+                placeholder="Nhập tên sản phẩm..."
                 className="w-full bg-transparent pl-9 pr-4 font-medium focus:outline-none xl:w-11/12"
               />
             </div>
@@ -109,22 +109,22 @@ const ProductTable = () => {
 
       <div className="grid grid-cols-9  border-t border-stroke px-4 py-4.5 dark:border-strokedark md:px-6 2xl:px-7.5">
         <div className="col-span-3 flex items-center">
-          <p className="font-bold">Product Name</p>
+          <p className="font-bold">Tên sản phẩm</p>
         </div>
         <div className="col-span-1 hidden items-center sm:flex">
-          <p className="font-bold">Status</p>
+          <p className="font-bold">Trạng thái</p>
         </div>
         <div className="col-span-1 hidden items-center sm:flex">
-          <p className="font-bold">Category</p>
+          <p className="font-bold">Thể loại</p>
         </div>
         <div className="col-span-2 flex items-center ">
-          <p className="w-full text-center font-bold">Price</p>
+          <p className="w-full text-center font-bold">Giá</p>
         </div>
         <div className="col-span-1 flex items-center justify-center">
-          <p className="font-bold">Discount (%)</p>
+          <p className="font-bold">Giảm giá (%)</p>
         </div>
         <div className="col-span-1 flex items-center justify-center">
-          <p className="font-bold">Action</p>
+          <p className="font-bold">Hành động</p>
         </div>
       </div>
 
@@ -155,11 +155,11 @@ const ProductTable = () => {
           <div className="col-span-1 hidden items-center sm:flex">
             {product.isStock ? (
               <p className="text-sm capitalize text-green-600 dark:text-white">
-                Available
+                Sẵn sàng
               </p>
             ) : (
               <p className="text-sm capitalize text-danger dark:text-white">
-                Sold Out
+                bán hết
               </p>
             )}
           </div>

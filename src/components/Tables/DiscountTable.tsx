@@ -137,7 +137,7 @@ const DiscountTable = ({filterStatus, setFilterStatus }) => {
                 type="text"
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
-                placeholder="Type to search..."
+                placeholder="Nhập code..."
                 className="w-full bg-transparent pl-9 pr-4 font-medium focus:outline-none xl:w-11/12"
               />
             </div>
@@ -152,16 +152,16 @@ const DiscountTable = ({filterStatus, setFilterStatus }) => {
                 Code
               </th>
               <th className="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
-                Start Date
+                Ngày bắt đầu
               </th>
               <th className="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
-                End Date
+                Ngày hết hạn
               </th>
               <th className="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
-                Status
+                Tình trạng
               </th>
               <th className="px-4 py-4 font-medium text-black dark:text-white">
-                Actions
+                Hành động
               </th>
             </tr>
           </thead>
@@ -186,7 +186,7 @@ const DiscountTable = ({filterStatus, setFilterStatus }) => {
                 </td>
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                   <p
-                    className={` capitalize inline-flex rounded-full bg-opacity-10 px-3 py-1 text-sm font-medium ${
+                    className={` inline-flex rounded-full bg-opacity-10 px-3 py-1 text-sm font-medium ${
                       voucher.status === "available"
                         ? "bg-success text-success"
                         : 
@@ -197,7 +197,13 @@ const DiscountTable = ({filterStatus, setFilterStatus }) => {
 
                     }`}
                   >
-                    {voucher.status}
+                    {voucher.status === "available"
+                        ? "Sẵn sàng"
+                        : 
+                        voucher.status === "pending"
+                        ? "Chờ hoạt động"
+                        :
+                        "Hết hạn"}
                   </p>
                  
                 </td>

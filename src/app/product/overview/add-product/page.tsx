@@ -8,13 +8,14 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "react-toastify";
+import Loader from "@/components/common/Loader";
 interface PriceItem {
   size: string;
   price: number;
 }
 
 const AddProduct = () => {
-
+  const [isLoading, setIsLoading] = useState(false);
   const [productName, setProductName] = useState("");
   const [categoryName, setCategoryName] = useState("");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -76,7 +77,7 @@ const AddProduct = () => {
   
     // Kiểm tra các giá trị
     if (!productName) {
-      toast.warning("Please enter product name", {
+      toast.warning("Yêu cầu nhập tên sản phẩm", {
         position: "top-right",
         autoClose: 1500
       })
@@ -84,28 +85,28 @@ const AddProduct = () => {
     }
     if (!categoryName) {
     
-      toast.warning("Please select category type", {
+      toast.warning("Yêu cầu chọn loại sản phẩm", {
         position: "top-right",
         autoClose: 1500
       })
       return;
     }
     if (!des) {
-      toast.warning("Please enter product description", {
+      toast.warning("Yêu cầu nhập mô tả sản phẩm", {
         position: "top-right",
         autoClose: 1500
       })
       return;
     }
     if (discount > 100 || discount < 0) {
-      toast.warning("Please enter discount value from 0 - 100", {
+      toast.warning("Nhập giảm giá trong khoảng 0-100(%)", {
         position: "top-right",
         autoClose: 1500
       })
       return;
     }
     if (!image) {
-      toast.warning("Please add image for product", {
+      toast.warning("Yêu cầu thêm ảnh cho sản phẩm", {
         position: "top-right",
         autoClose: 1500
       })
@@ -113,12 +114,13 @@ const AddProduct = () => {
     }
     if (type.length === 0) {
       
-      toast.warning("Requires types for products", {
+      toast.warning("Yêu cầu các size cho sản phẩm", {
         position: "top-right",
         autoClose: 1500
       })
       return;
     }
+    setIsLoading(true)
   
     form.append("name", productName);
     form.append("type", JSON.stringify(type));
@@ -140,24 +142,27 @@ const AddProduct = () => {
             position: "top-right",
             autoClose: 1500
           })
+          setIsLoading(false)
           return;
         }
         else{
           fetchProducts();
-          toast.success("Add product sucessfully", {
+          toast.success("Thêm sản phẩm thành công", {
             position: "top-right",
             autoClose: 2000
           })
+          setIsLoading(false)
           router.push("/product/overview")
         }
         
         console.log('Response:', res.data);
       })
       .catch((err) => {
-        toast.error("Add product fail", {
+        toast.error("Thêm sản phẩm thất bại", {
           position: "top-right",
           autoClose: 1500
         })
+        setIsLoading(false)
         console.log("Error:", err.response ? err.response.data : err.message);
       })
       
@@ -167,26 +172,29 @@ const AddProduct = () => {
   
   return (
     <DefaultLayout>
+      {isLoading && <Loader/>}
       <Breadcrumb
         items={[
           { name: "Dashboard", href: "/" },
-          { name: "Product Overview", href: "/product/overview" },
-          { name: "Add Product" },
+          { name: "Tổng quan sản phẩm", href: "/product/overview" },
+          { name: "Thêm sản phẩm" },
         ]}
       />
+      
       <div className="flex flex-col gap-10">
+      
         <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
           <form action="#">
             <div className="p-6.5">
               <div className="mb-4.5">
                 <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                  Product Name
+                Tên sản phẩm
                 </label>
                 <input
                   type="text"
                   value={productName}
                   onChange={(e) => setProductName(e.target.value)}
-                  placeholder="Enter product name"
+                  placeholder="Nhập tên sản phẩm"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                 />
               </div>
@@ -196,22 +204,22 @@ const AddProduct = () => {
                   <div className="mb-4.5 flex flex-row gap-4">
                     <button className="rounded px-3 py-1 font-medium text-black shadow-card shadow-gray-400 hover:bg-slate-700 hover:text-white hover:shadow-card dark:text-white dark:hover:bg-boxdark" 
                     type="button" onClick={() => addSize("S")}>
-                      Add Size S
+                      Thêm Size S
                     </button>
                     <button className="rounded px-3 py-1 font-medium text-black shadow-card shadow-gray-400 hover:bg-slate-700 hover:text-white hover:shadow-card dark:text-white dark:hover:bg-boxdark" 
                     type="button" onClick={() => addSize("M")}>
-                      Add Size M
+                      Thêm Size M
                     </button>
                     <button className="rounded px-3 py-1 font-medium text-black shadow-card shadow-gray-400 hover:bg-slate-700 hover:text-white hover:shadow-card dark:text-white dark:hover:bg-boxdark" 
                     type="button" onClick={() => addSize("L")}>
-                      Add Size L
+                      Thêm Size L
                     </button>
                   </div>
                   {type ? (
                     type.map((item) => (
                       <div className="mb-4.5" key={item.size}>
                         <label className="capitalize mb-3 block text-sm font-medium text-black dark:text-white">
-                          Enter Price for size {item.size}
+                        Nhập giá sản phẩm size {item.size}
                         </label>
                         <input
                           type="number"
@@ -231,19 +239,19 @@ const AddProduct = () => {
               )}
               <div className="mb-4.5">
                 <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                  Product Description
+                Mô tả sản phẩm
                 </label>
                 <input
                   type="text"
                   value={des}
                   onChange={(e) => setDes(e.target.value)}
-                  placeholder="Enter product description"
+                  placeholder="Nhập mô tả sản phẩm"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                 />
               </div>
               <div className="mb-4.5">
                 <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                  Product Discount
+                Phần trăm giảm giá (%)
                 </label>
                 <input
                   type="number"
@@ -255,7 +263,7 @@ const AddProduct = () => {
               </div>
               <div className="mb-4.5">
                 <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                  Attach Product Image
+                Hình ảnh sản phẩm
                 </label>
                 <input
                   type="file"
@@ -280,10 +288,11 @@ const AddProduct = () => {
                 </div>
               )}
               <button
+              // onClick={(e) => setIsLoading(true)}
               onClick={handleSubmit}
               
               className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">
-                Add
+                Thêm
               </button>
             </div>
           </form>

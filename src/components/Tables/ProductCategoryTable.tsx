@@ -47,13 +47,13 @@ const ProductCategoryTable = () => {
       .delete(`http://localhost:8081/v1/api/user/categories/${categoryID}`)
       .then((response) => {
         if (response.data.success == true) {
-          toast.success("Xóa category thành công", {
+          toast.success("Xóa thể loại thành công", {
             position: "top-right",
             autoClose: 2000
           })
           fetchCategories();
         } else {
-          toast.error("Xóa category thất bại", {
+          toast.error("Xóa thể loại thất bại", {
             position: "top-right",
             autoClose: 2000
           })
@@ -78,7 +78,7 @@ const ProductCategoryTable = () => {
           </button>
           <input
             type="text"
-            placeholder="Type to search..."
+            placeholder="Tìm tên thể loại..."
             className="w-full bg-transparent pl-9 pr-4 font-medium focus:outline-none xl:w-11/12"
           />
         </div>
@@ -90,10 +90,10 @@ const ProductCategoryTable = () => {
           <thead>
             <tr className="bg-gray-2 text-left dark:bg-meta-4">
               <th className="min-w-[220px] px-4 py-4 font-bold text-black dark:text-white xl:pl-11">
-                Category Name
+                Tên thể loại
               </th>
               <th className="px-4 py-4 font-bold text-black dark:text-white">
-                Actions
+                Hành động
               </th>
             </tr>
           </thead>

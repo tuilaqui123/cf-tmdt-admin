@@ -29,7 +29,7 @@ const router = useRouter();
     event.preventDefault();
     if (!discountCode) {
     
-      toast.warning("Please enter code name", {
+      toast.warning("Yêu cầu nhập code cho phiếu", {
         position: "top-right",
         autoClose: 1500
       })
@@ -37,7 +37,7 @@ const router = useRouter();
     }
     if (!startDate) {
       
-      toast.warning("Please enter discount start day", {
+      toast.warning("Yêu cầu chọn ngày bắt đầu", {
         position: "top-right",
         autoClose: 1500
       })
@@ -45,7 +45,7 @@ const router = useRouter();
     }
     if (!expiredtDate) {
       
-      toast.warning("Please enter discount expired day", {
+      toast.warning("Yêu cầu chọn ngày hết hạn", {
         position: "top-right",
         autoClose: 1500
       })
@@ -54,14 +54,14 @@ const router = useRouter();
     const currentDate = new Date();
     if (convertToDate(expiredtDate) < currentDate || convertToDate(expiredtDate) < convertToDate(startDate) ) {
       
-      toast.warning("Please enter expired day which is not smaller than start day", {
+      toast.warning("Yêu cầu chọn ngày hết hạn lớn hơn ngày bắt đầu và ngày hiện tại", {
         position: "top-right",
         autoClose: 1500
       })
       return;
     }
     if (!type) {
-      toast.warning("Please choose discount type", {
+      toast.warning("Yêu cầu chọn loại phiếu", {
         position: "top-right",
         autoClose: 1500
       })
@@ -69,14 +69,14 @@ const router = useRouter();
     }
     if (!discountValue) {
       
-      toast.warning("Please enter discount value", {
+      toast.warning("Yêu cầu nhập giá trị phiếu", {
         position: "top-right",
         autoClose: 1500
       })
       return;
     }
-    if (type=="Trade" && discountValue > 100) {
-      toast.warning("Please enter discount value smaller than 100(%)", {
+    if (type=="Trade" && (discountValue > 50 || discountValue < 0)) {
+      toast.warning("Yêu cầu nhập giá trị phần trăm trong khoảng 0-50(%)", {
         position: "top-right",
         autoClose: 1500
       })
@@ -100,7 +100,7 @@ const router = useRouter();
 
           console.log(data);
           fetchVouchers()
-          toast.success("Create voucher successfully", {
+          toast.success("Tạo phiếu giảm giá thành công", {
             position: "top-right",
             autoClose: 2000,
           });
@@ -108,7 +108,7 @@ const router = useRouter();
   })
       .catch((err) => {
         console.error(err);
-        toast.error("Create voucher failed", {
+        toast.error("Tạo phiếu giảm giá thất bại", {
           position: "top-right",
           autoClose: 2000,
         });
@@ -149,8 +149,8 @@ const router = useRouter();
       <Breadcrumb
         items={[
           { name: "Dashboard", href: "/" },
-          { name: "Discount", href: "/discount" },
-          { name: "Add Discount" },
+          { name: "Phiếu giảm giá", href: "/discount" },
+          { name: "Thêm phiếu" },
         ]}
       />
       <div className="flex flex-col gap-10">
@@ -159,27 +159,27 @@ const router = useRouter();
             <div className="p-6.5">
               <div className="mb-4.5">
                 <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                  Discount Code
+                Mã Code
                 </label>
                 <input
                   type="text"
                   value={discountCode}
                   onChange={handleInputChange}
-                  placeholder="Enter discount code"
+                  placeholder="Nhập mã phiếu"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 uppercase text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                 />
               </div>
               <div className="mb-4.5">
                 <DatePicker
                 value={startDate}
-                  title="Select Start Date"
+                  title="Chọn ngày bắt đầu"
                   onDateChange={handleStartDateChange}
                 />
               </div>
               <div className="mb-4.5">
                 <DatePicker
                 value={expiredtDate}
-                  title="Select Expired Date"
+                  title="Chọn ngày hết hạn"
                   onDateChange={handleExpiredDateChange}
                 />
               </div>
@@ -189,7 +189,7 @@ const router = useRouter();
               {type == "Trade" ? (
                 <div className="mb-4.5">
                   <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                    Discount Value (%)
+                  Giá trị phần trăm (%)
                   </label>
                   <input
                     type="number"
@@ -202,7 +202,7 @@ const router = useRouter();
               ) : type == "Chain" ? (
                 <div className="mb-4.5">
                   <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                    Discount Value (VNĐ)
+                  Giá trị số tiền giảm (VNĐ)
                   </label>
                   <input
                     type="number"
@@ -219,7 +219,7 @@ const router = useRouter();
               <button
               onClick={handleSubmit} 
               className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">
-                Add
+                Thêm
               </button>
             </div>
           </form>

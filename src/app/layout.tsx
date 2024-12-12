@@ -24,11 +24,12 @@ export default function RootLayout({
 
   return (
     <html lang="en">
+      <head><title>Admin Caffeine Corner</title></head>
       <body suppressHydrationWarning={true}>
         <ToastContainer/>
         <AppProvider>
         <div className="dark:bg-boxdark-2 dark:text-bodydark">
-          {loading ? <Loader /> : children}
+          {children}
         </div>
         </AppProvider>
       </body>

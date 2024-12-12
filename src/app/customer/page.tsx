@@ -6,6 +6,7 @@ import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import { Contexts } from "@/app/Contexts";
+import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 
 const CustomerTable = () => {
   const{users}: any = useContext(Contexts);
@@ -58,13 +59,11 @@ const CustomerTable = () => {
   return (
     <DefaultLayout>
 
-    
+<Breadcrumb pageName="Khách Hàng" />
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-      <div className="px-4 py-6 md:px-6 xl:px-7.5">
-        <h4 className="text-xl font-semibold text-black dark:text-white">
-          Customers
-        </h4>
-      </div>
+      
+      
+      
       <div className=" inset-0 flex justify-start">
         <div className=" w-full px-4 py-5 sm:block">
           <form action="#" method="POST">
@@ -76,7 +75,7 @@ const CustomerTable = () => {
                 type="text"
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
-                placeholder="Type to search..."
+                placeholder="Nhập tên khách hàng..."
                 className="w-full bg-transparent pl-9 pr-4 font-medium focus:outline-none xl:w-11/12"
               />
             </div>
@@ -85,16 +84,16 @@ const CustomerTable = () => {
       </div>
       <div className="grid  border-t border-stroke px-4 py-4.5 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
         <div className="col-span-2 flex items-center ">
-          <p className="font-bold">Full Name</p>
+          <p className="font-bold">Họ tên</p>
         </div>
         <div className="col-span-2 hidden items-center sm:flex">
           <p className="font-bold">Email</p>
         </div>
         <div className="col-span-3 flex items-center">
-          <p className="font-bold">Address</p>
+          <p className="font-bold">Địa chỉ</p>
         </div>
         <div className="col-span-1 flex items-center">
-          <p className="font-bold">Phone Number</p>
+          <p className="font-bold">Số điện thoại</p>
         </div>
       </div>
 

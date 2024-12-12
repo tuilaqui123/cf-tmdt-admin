@@ -93,7 +93,7 @@ const OrderOverViewTable = () => {
 
 
   return (
-    <div className=" relative rounded-sm border border-stroke bg-white px-5 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+    <div className=" relative rounded-sm border border-stroke bg-white pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark  xl:pb-1">
       {/* <div className=" inset-0 flex justify-start">
         <div className=" w-full px-4 py-5 sm:block">
           <form action="#" method="POST">
@@ -117,19 +117,19 @@ const OrderOverViewTable = () => {
           <thead>
             <tr className="bg-gray-2 text-left dark:bg-meta-4">
               <th className="min-w-[175px] px-4 py-4 font-medium text-black dark:text-white xl:pl-6">
-                User
+                Người đặt
               </th>
               <th className="flex min-w-[450px] justify-center px-4 py-4 font-medium text-black dark:text-white">
-                Items
+                Sản phẩm
               </th>
-              <th className="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
-                Voucher Used
+              <th className="min-w-[90px] px-4 py-4 font-medium text-black dark:text-white">
+                Phiếu giảm giá
               </th>
-              <th className="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
-                Payment
+              <th className="min-w-[120px] text-center px-4 py-4 font-medium text-black dark:text-white">
+                Thanh toán
               </th>
-              <th className="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
-                Status
+              <th className="min-w-[120px] px-4 py-4 font-medium text-black text-center dark:text-white">
+                Trạng thái
               </th>
 
             </tr>
@@ -180,14 +180,14 @@ const OrderOverViewTable = () => {
                          
                         <div className="flex flex-col items-start gap-2">
                           
-                          <p>Quantity: {item.quantity}</p>
-                          <p>Price: {item.quantity * item.price} </p>
+                          <p>Số lượng: {item.quantity}</p>
+                          <p>Giá: {item.quantity * item.price} </p>
                         </div>
                       </div>
                       
                     ))}
                   </div>
-                  <p className="text-right mt-3 font-black text-base ">Total: {orderItem.total} </p>
+                  <p className="text-right mt-3 font-black text-base ">Tổng cộng: {orderItem.total} </p>
                 </td>
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                 {orderItem.voucher.length > 0 ? (
@@ -197,15 +197,20 @@ const OrderOverViewTable = () => {
                     </p>
                   ))
                 ) : (
-                  <p>No voucher used</p>
+                  <p className="break-words">Không sử dụng</p>
                 )}
                 </td>
-                <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                <td className=" text-center border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                   <p className="capitalize">
-                    {orderItem.paymentMethod}: {orderItem.paymentStatus}
+                    {orderItem.paymentMethod} 
                   </p>
+                  <p className="capitalize">
+                  {orderItem.paymentStatus == "paid"?"Đã thanh toán":"Chưa thanh toán"}
+                  </p>
+
+                  
                 </td>
-                <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                <td className="border-b text-center  border-[#eee] px-4 py-5 dark:border-strokedark">
                   <p
                     className={`capitalize inline-flex rounded-full bg-opacity-10 px-3 py-1 font-medium ${
                       orderItem.deliveryStatus === "success"
@@ -217,13 +222,25 @@ const OrderOverViewTable = () => {
                             : orderItem.deliveryStatus === "doing"
                               ? " text-[#10B981]"
                               : orderItem.deliveryStatus === "confirmed"
-                                ? " text-[#313D4A]"
+                                ? " text-orange-500"
                                 : orderItem.deliveryStatus === "pending"
                                   ? " text-warning"
                                   : " text-danger"
                     }`}
                   >
-                    {orderItem.deliveryStatus}
+                    {orderItem.deliveryStatus === "success"
+                        ? " Thành công"
+                        : orderItem.deliveryStatus === "fail"
+                          ? " Thất bại"
+                          : orderItem.deliveryStatus === "shipping"
+                            ? " Đang vận chuyển"
+                            : orderItem.deliveryStatus === "doing"
+                              ? " Đang làm"
+                              : orderItem.deliveryStatus === "confirmed"
+                                ? " Đã xác nhận"
+                                : orderItem.deliveryStatus === "pending"
+                                  ? " Chờ xác nhận"
+                                  : " Đã hủy"}
                   </p>
                 </td>
                 

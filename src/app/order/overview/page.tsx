@@ -11,7 +11,7 @@ import DefaultLayout from "@/components/Layouts/DefaultLayout";
 const TablesPage = () => {
   return (
     <DefaultLayout>
-      <Breadcrumb pageName="Order Table" />
+      <Breadcrumb pageName="Tổng quan đơn hàng" />
 
       <div className="flex flex-col gap-10">
         

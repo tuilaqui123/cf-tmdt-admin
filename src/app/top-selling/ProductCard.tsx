@@ -16,7 +16,7 @@ const ProductCard = ({ item, sales, discount, isTopSelling }) => {
       </div>
       <div className="ml-4 flex-1">
         <h3 className="text-base font-medium text-gray-800 dark:text-gray-300">{item.name}</h3>
-        {sales && <p className="text-lg text-gray-500 dark:text-gray-100">{sales} sold</p>}
+        {sales && <p className="text-lg text-gray-500 dark:text-gray-100">{sales}</p>}
         {discount && <p className="text-lg text-gray-500 dark:text-gray-100">{item.discount}%</p>}
       </div>
       {isTopSelling && (

@@ -146,22 +146,22 @@ const OrderTable = ({ filterStatus, setFilterStatus }) => {
           <thead>
             <tr className="bg-gray-2 text-left dark:bg-meta-4">
               <th className="min-w-[175px] px-4 py-4 font-medium text-black dark:text-white xl:pl-6">
-                User
+              Người đặt
               </th>
               <th className="flex min-w-[450px] justify-center px-4 py-4 font-medium text-black dark:text-white">
-                Items
+              Sản phẩm
               </th>
               <th className="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
-                Voucher Used
+              Phiếu giảm giá
               </th>
-              <th className="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
-                Payment
+              <th className="min-w-[120px] text-center px-4 py-4 font-medium text-black dark:text-white">
+              Thanh toán
               </th>
-              <th className="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
-                Status
+              <th className="min-w-[120px] text-center px-4 py-4 font-medium text-black dark:text-white">
+              Trạng thái
               </th>
               <th className="px-4 py-4 font-medium text-black dark:text-white">
-                Actions
+                Hành động
               </th>
             </tr>
           </thead>
@@ -203,14 +203,14 @@ const OrderTable = ({ filterStatus, setFilterStatus }) => {
 
                         <div className="flex flex-col items-start gap-2 text-sm">
                           <p className="uppercase">Size: {item.size}</p>
-                          <p>Quantity: {item.quantity}</p>
-                          <p>Price: {item.quantity * item.price} </p>
+                          <p>Số lượng: {item.quantity}</p>
+                          <p>Giá: {item.quantity * item.price} </p>
                         </div>
                       </div>
                     ))}
                   </div>
                   <p className="mt-3 text-right text-base font-semibold ">
-                    Total: {orderItem.total}{" "}
+                    Tổng cộng: {orderItem.total}{" "}
                   </p>
                 </td>
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
@@ -224,15 +224,18 @@ const OrderTable = ({ filterStatus, setFilterStatus }) => {
                       </p>
                     ))
                   ) : (
-                    <p>No voucher used</p>
+                    <p>Không sử dụng</p>
                   )}
                 </td>
-                <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                <td className="border-b text-center border-[#eee] px-4 py-5 dark:border-strokedark">
+                <p className="capitalize">
+                    {orderItem.paymentMethod} 
+                  </p>
                   <p className="capitalize">
-                    {orderItem.paymentMethod}: {orderItem.paymentStatus}
+                  {orderItem.paymentStatus == "paid"?"Đã thanh toán":"Chưa thanh toán"}
                   </p>
                 </td>
-                <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                <td className=" text-center border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                   <p
                     className={`inline-flex rounded-full bg-opacity-10 font-medium  capitalize ${
                       orderItem.deliveryStatus === "success"
@@ -250,7 +253,19 @@ const OrderTable = ({ filterStatus, setFilterStatus }) => {
                                   : " text-danger"
                     }`}
                   >
-                    {orderItem.deliveryStatus}
+                    {orderItem.deliveryStatus === "success"
+                        ? " Thành công"
+                        : orderItem.deliveryStatus === "fail"
+                          ? " Thất bại"
+                          : orderItem.deliveryStatus === "shipping"
+                            ? " Đang vận chuyển"
+                            : orderItem.deliveryStatus === "doing"
+                              ? " Đang làm"
+                              : orderItem.deliveryStatus === "confirmed"
+                                ? " Đã xác nhận"
+                                : orderItem.deliveryStatus === "pending"
+                                  ? " Chờ xác nhận"
+                                  : " Đã hủy"}
                   </p>
                 </td>
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">

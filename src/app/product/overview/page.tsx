@@ -12,13 +12,13 @@ import Link from "next/link";
 const ProductOverview = () => {
   return (
     <DefaultLayout>
-      <Breadcrumb pageName="Product Overview" />
+      <Breadcrumb pageName="Tổng quan sản phẩm" />
       
       <Link
               href="/product/overview/add-product"
               className="mb-3 inline-flex items-center justify-center rounded-full bg-black px-5 py-3 text-center font-normal text-white hover:bg-opacity-90 lg:px-4 xl:px-6"
             >
-              Add Product
+              Thêm sản phẩm
             </Link>
       <div className="flex flex-col gap-10">
         

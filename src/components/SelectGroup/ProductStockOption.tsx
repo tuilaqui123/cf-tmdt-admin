@@ -28,7 +28,7 @@ const ProductStatusOption: React.FC<OrderStatusOptionProps> = ({ value, onStatus
   return (
     <div className="mb-4.5">
       <label className="mb-2.5 block text-black dark:text-white">
-      Select Product Status
+      Trạng thái
       </label>
 
       <div className="capitalize relative z-20 bg-transparent dark:bg-form-input">
@@ -40,7 +40,7 @@ const ProductStatusOption: React.FC<OrderStatusOptionProps> = ({ value, onStatus
           }`}
         >
           <option value="" disabled className="text-body dark:text-bodydark">
-            Select Stock Option
+            Chọn trạng thái
           </option>
           
             <option
@@ -48,14 +48,14 @@ const ProductStatusOption: React.FC<OrderStatusOptionProps> = ({ value, onStatus
               value="true"
               className="text-body capitalize dark:text-bodydark"
             >
-              Available
+              Sẵn sàng
             </option>
             <option
               
               value="false"
               className="text-body capitalize dark:text-bodydark"
             >
-              Sold Out
+              Bán hết
             </option>
         
         </select>

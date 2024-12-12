@@ -231,7 +231,7 @@ const OverviewRevenue: React.FC<OverviewCardProps> = ({ title, value, icon, orde
           </option>
         ))
       ) : (
-        <option value="all">Choose month to select date</option>
+        <option value="all">Chọn tháng để có lựa chọn</option>
       )}
     </select>
   </div>

@@ -15,7 +15,7 @@ const VoucherTypeOption: React.FC<VoucherTypeOptionProps> = ({
 
   return (
     <div className="mb-4.5">
-      <label className="mb-2.5 block text-black dark:text-white">Discount Type</label>
+      <label className="mb-2.5 block text-black dark:text-white">Chọn loại phiếu</label>
 
       <div className="relative z-20 bg-transparent dark:bg-form-input">
         <select
@@ -24,10 +24,10 @@ const VoucherTypeOption: React.FC<VoucherTypeOptionProps> = ({
           className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent px-5 py-3 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
         >
           <option value="" disabled selected>
-            Select Voucher Type
+          Chọn loại phiếu
           </option> 
-          <option value="Trade">Percent</option>
-          <option value="Chain">Amount</option>
+          <option value="Trade">Phần trăm</option>
+          <option value="Chain">Số tiền</option>
         </select>
 
         <span className="absolute right-4 top-1/2 z-30 -translate-y-1/2">

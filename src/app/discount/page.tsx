@@ -14,7 +14,7 @@ const TablesPage = () => {
   };
   return (
     <DefaultLayout>
-      <Breadcrumb pageName="Discount" />
+      <Breadcrumb pageName="Phiếu giảm giá" />
       <div className="flex flex-row w-full justify-between ">
         <Link 
           href="/discount/add-discount"
@@ -23,7 +23,7 @@ const TablesPage = () => {
           px-5 py-3 text-center 
           font-normal text-white lg:px-4 xl:px-6"
         >
-          Add Discount
+         Thêm Phiếu
         </Link>
         <div className="flex items-center  gap-3 rounded-md bg-whiter p-2 dark:bg-inherit ">
           <button 
@@ -31,21 +31,21 @@ const TablesPage = () => {
           className=" text-warning rounded  px-3 py-1 font-medium  shadow-card 
           shadow-gray-400 hover:bg-slate-700 hover:text-white hover:shadow-card 
           dark:bg-cyan-950 dark:text-warning dark:hover:bg-[#3d50e0] dark:hover:text-white">
-            Pending
+            Chờ hoạt động
           </button>
           <button 
            onClick={() => toggleStatus("available")}
           className=" text-success rounded  px-3 py-1 font-medium  shadow-card 
           shadow-gray-400 hover:bg-slate-700 hover:text-white hover:shadow-card 
           dark:bg-cyan-950 dark:text-success  dark:hover:bg-[#3d50e0] dark:hover:text-white">            
-          Available
+          Sẵn sàng
           </button>
           <button 
           onClick={() => toggleStatus("expired")}
           className=" text-danger rounded  px-3 py-1 font-medium  shadow-card 
           shadow-gray-400 hover:bg-slate-700 hover:text-white hover:shadow-card 
           dark:bg-cyan-950 dark:text-danger dark:hover:bg-[#3d50e0] dark:hover:text-white">            
-          Expired
+          Hết hạn
           </button>
           
         </div>

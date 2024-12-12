@@ -11,13 +11,13 @@ import Link from "next/link";
 const ProductCategory = () => {
   return (
     <DefaultLayout>
-      <Breadcrumb pageName="Product Category" />
+      <Breadcrumb pageName="Thể loại sản phẩm" />
 
       <Link
               href="/product/category/add-category"
               className="mb-3 inline-flex items-center justify-center rounded-full bg-black px-5 py-3 text-center font-normal text-white hover:bg-opacity-90 lg:px-4 xl:px-6"
             >
-              Add Category
+              Thêm thể loại
             </Link>
       <div className="flex flex-col gap-10">
         

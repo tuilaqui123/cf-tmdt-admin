@@ -9,7 +9,7 @@ const StatusChart: React.FC<StatusChartProps> = ({ data }) => {
   return (
     <div className="bg-white shadow rounded-lg p-4 dark:bg-gray-800">
       <h3 className="font-medium text-gray-500 mb-4 dark:text-gray-400">
-      Order Status
+      Trạng thái đơn hàng
       </h3>
       <PieChart
         series={[

@@ -78,24 +78,24 @@ const yesterdayOrders = orders.filter((order) =>
 
   return (
     <DefaultLayout>
-      <Breadcrumb pageName="Overview" />
+      <Breadcrumb pageName="Tổng quan" />
 
       <div className="bg-gray-100 min-h-screen p-8 dark:bg-gray-900">
   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
   <OrdersCard
-  title="Total Orders Today"
+  title="Tổng đơn hàng hôm nay"
   current={todayOrders}
   previous={yesterdayOrders}
   icon={<ShoppingCartIcon className="text-blue-500" />}
 />
     <OverviewRevenue
-      title="Revenue"
+      title="Doanh thu"
       value={`${totalRevenue.toLocaleString()} VND`}
       icon={<AttachMoneyIcon className="text-green-500" />}
       orders={orders}  // Truyền orders vào OverviewCard
     />
     <OverviewCard
-      title="Customers"
+      title="Khách hàng"
       value={new Set(orders.map((order) => order.user)).size}
       icon={<PersonIcon className="text-purple-500" />}
     />

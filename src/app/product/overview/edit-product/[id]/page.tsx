@@ -9,6 +9,8 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "react-toastify";
+import Loader from "@/components/common/Loader";
+
 interface PriceItem {
   size: string;
   price: number;
@@ -16,6 +18,8 @@ interface PriceItem {
 
 const EditProduct = ({ params }: { params: { id: string } }) => {
     const { id } = params;
+    const [isLoading, setIsLoading] = useState(false);
+
   const [productName, setProductName] = useState("");
   const [categoryName, setCategoryName] = useState("");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -131,7 +135,14 @@ const EditProduct = ({ params }: { params: { id: string } }) => {
     }
     if (type.length === 0) {
       
-      toast.warning("Yêu cầu các type cho sản phẩm", {
+      toast.warning("Yêu cầu các size cho sản phẩm", {
+        position: "top-right",
+        autoClose: 1500
+      })
+      return;
+    }
+    if (discount > 100 || discount < 0) {
+      toast.warning("Nhập giảm giá trong khoảng 0-100(%)", {
         position: "top-right",
         autoClose: 1500
       })
@@ -145,7 +156,8 @@ const EditProduct = ({ params }: { params: { id: string } }) => {
       })
       return;
     }
-  
+    setIsLoading(true)
+
     form.append("name", productName);
     form.append("type", JSON.stringify(type));
     form.append("description", des);
@@ -167,12 +179,15 @@ const EditProduct = ({ params }: { params: { id: string } }) => {
             position: "top-right",
             autoClose: 1500
           })
+          setIsLoading(false)
+
           return;
         }
         toast.success("Sửa sản phẩm thành công", {
           position: "top-right",
           autoClose: 2000,
           onClose: () =>{
+            setIsLoading(false)
             fetchProducts()
             router.push("/product/overview")
           }
@@ -181,7 +196,8 @@ const EditProduct = ({ params }: { params: { id: string } }) => {
         console.log('Response:', res.data);
       })
       .catch((err) => {
-        
+        setIsLoading(false)
+
         console.log("Error:", err.response ? err.response.data : err.message);
       })
       // .finally(() => {
@@ -196,11 +212,12 @@ const EditProduct = ({ params }: { params: { id: string } }) => {
   
   return (
     <DefaultLayout>
+       {isLoading && <Loader/>}
       <Breadcrumb
         items={[
           { name: "Dashboard", href: "/" },
-          { name: "Product Overview", href: "/product/overview" },
-          { name: "Edit Product" },
+          { name: "Tổng quan sản phẩm", href: "/product/overview" },
+          { name: "Sửa sản phẩm" },
         ]}
       />
       <div className="flex flex-col gap-10">
@@ -209,7 +226,7 @@ const EditProduct = ({ params }: { params: { id: string } }) => {
             <div className="p-6.5">
               <div className="mb-4.5">
                 <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                  Product Name
+                 Tên sản phẩm
                 </label>
                 <input
                   type="text"
@@ -225,22 +242,22 @@ const EditProduct = ({ params }: { params: { id: string } }) => {
                   <div className="mb-4.5 flex flex-row gap-4">
                     <button className="rounded px-3 py-1 font-medium text-black shadow-card shadow-gray-400 hover:bg-slate-700 hover:text-white hover:shadow-card dark:text-white dark:hover:bg-boxdark" 
                     type="button" onClick={() => addSize("S")}>
-                      Add Size S
+                      Thêm Size S
                     </button>
                     <button className="rounded px-3 py-1 font-medium text-black shadow-card shadow-gray-400 hover:bg-slate-700 hover:text-white hover:shadow-card dark:text-white dark:hover:bg-boxdark" 
                     type="button" onClick={() => addSize("M")}>
-                      Add Size M
+                      Thêm Size M
                     </button>
                     <button className="rounded px-3 py-1 font-medium text-black shadow-card shadow-gray-400 hover:bg-slate-700 hover:text-white hover:shadow-card dark:text-white dark:hover:bg-boxdark" 
                     type="button" onClick={() => addSize("L")}>
-                      Add Size L
+                      Thêm Size L
                     </button>
                   </div>
                   {type ? (
                     type.map((item) => (
                       <div className="mb-4.5" key={item.size}>
                         <label className="capitalize mb-3 block text-sm font-medium text-black dark:text-white">
-                          Enter Price for size {item.size}
+                          Nhập giá sản phẩm size {item.size}
                         </label>
                         <input
                           type="number"
@@ -260,7 +277,7 @@ const EditProduct = ({ params }: { params: { id: string } }) => {
               )}
               <div className="mb-4.5">
                 <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                  Product Description
+                  Mô tả
                 </label>
                 <input
                   type="text"
@@ -272,7 +289,7 @@ const EditProduct = ({ params }: { params: { id: string } }) => {
               </div>
               <div className="mb-4.5">
                 <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                  Product Discount
+                  Phần trăm giảm giá (%)
                 </label>
                 <input
                   type="number"
@@ -285,7 +302,7 @@ const EditProduct = ({ params }: { params: { id: string } }) => {
               <ProductStatusOption value={isStock}  onStatusChange={handleStatusChange}/>
               <div className="mb-4.5">
                 <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                  Attach Product Image
+                  Hình ảnh sản phẩm
                 </label>
                 <input
                   type="file"
@@ -313,7 +330,7 @@ const EditProduct = ({ params }: { params: { id: string } }) => {
               onClick={handleSubmit}
               
               className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">
-                Edit Product
+                Sửa
               </button>
             </div>
           </form>
